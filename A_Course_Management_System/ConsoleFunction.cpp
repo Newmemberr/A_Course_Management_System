@@ -41,64 +41,13 @@ void ResetColor() //dat lai mau goc
     SetColor("black", "white");
 }
 
-Pair GetMousePosWin(MOUSE_EVENT_RECORD mer)
+void Change_Text_Size(int a, int b)
 {
-    Pair ans;
-    int x, y;
-    INPUT_RECORD Inrec;
-    DWORD eventRead;
-    HANDLE hStdIn;
-    DWORD dwMode;
-    bool Captured = false;
-    hStdIn = GetStdHandle(STD_INPUT_HANDLE);
-    dwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
-
-    SetConsoleMode(hStdIn, dwMode | ENABLE_MOUSE_INPUT);
-
-    GetConsoleMode(hStdIn, &dwMode);
-
-    SetConsoleMode(hStdIn, (dwMode & (ENABLE_MOUSE_INPUT)));
-    do
-    {
-        PeekConsoleInput(hStdIn, &Inrec, 1, &eventRead);
-        if (eventRead)
-        {
-            ReadConsoleInput(hStdIn, &Inrec, 1, &eventRead);
-            ans.x = Inrec.Event.MouseEvent.dwMousePosition.X;
-            ans.y = Inrec.Event.MouseEvent.dwMousePosition.Y;
-            return ans;
-        }
-    } while (true);
-}
-
-Pair Show_Mouse_Pos()
-{
-    Pair ans;
-    HANDLE hStdin;
-    DWORD cNumRead, fdwMode, i;
-    INPUT_RECORD irInBuf[128];
-
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-
-    fdwMode = ENABLE_EXTENDED_FLAGS;
-    SetConsoleMode(hStdin, fdwMode);
-
-    fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
-    SetConsoleMode(hStdin, fdwMode);
-
-    while (true)
-    {
-        ReadConsoleInput(hStdin, irInBuf, 128, &cNumRead);
-        
-        for (i = 0; i < cNumRead; i++)
-        {
-            switch (irInBuf[i].EventType) {
-            case MOUSE_EVENT: 
-                ans = GetMousePosWin(irInBuf[i].Event.MouseEvent);
-                return ans;
-            default:
-                break;
-            }
-        }
-    }
+    static CONSOLE_FONT_INFOEX  fontex;
+    fontex.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    GetCurrentConsoleFontEx(hOut, 0, &fontex);
+    fontex.dwFontSize.X = a;
+    fontex.dwFontSize.Y = b;
+    SetCurrentConsoleFontEx(hOut, NULL, &fontex);
 }
