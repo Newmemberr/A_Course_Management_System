@@ -1,18 +1,17 @@
 #include"MyLib.h"
 
-void Invisible_Cursor() // xoa dau nhay 
+void Invisible_Cursor(bool k) // xoa dau nhay 
 {
     CONSOLE_CURSOR_INFO Info;
-    Info.bVisible = FALSE;
+    Info.bVisible = k;
     Info.dwSize = 20;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
 }
 
-void Gotoxy(int x, int y) //di chuyen con tro den vi tri (x,y)
+void Gotoxy(short x, short y) //di chuyen con tro den vi tri (x,y)
 {
     static HANDLE h = NULL;
-    if (!h)
-        h = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (!h) h = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD c = { x, y };
     SetConsoleCursorPosition(h, c);
 }
@@ -38,7 +37,7 @@ void SetColor(string BG_Color, string Text_Color) // change color
 
 void ResetColor() //dat lai mau goc
 {
-    SetColor("black", "white");
+    SetColor("white", "black");
 }
 
 void Change_Text_Size(int a, int b)
