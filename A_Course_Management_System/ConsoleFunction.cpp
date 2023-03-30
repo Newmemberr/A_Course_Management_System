@@ -16,7 +16,7 @@ void Gotoxy(short x, short y) //di chuyen con tro den vi tri (x,y)
     SetConsoleCursorPosition(h, c);
 }
 
-void SetColor(string BG_Color, string Text_Color) // change color
+void SetColor(string BG_Color, string Text_Color) // doi mau
 {
     int backgound_color = 0, text_color = 0;
     string a[16]{ "black", "blue", "green", "aqua", "red", "purple", "yellow", "white", "gray", "light blue", "light green", " light aqua", "light red", "light purple", "light yellow", "bright white"};
@@ -37,11 +37,13 @@ void SetColor(string BG_Color, string Text_Color) // change color
 
 void ResetColor() //dat lai mau goc
 {
-    SetColor("white", "black");
+    SetColor(Main_BG_Color, Main_Text_Color);
 }
 
 void Change_Text_Size(int a, int b)
 {
+    // a la chieu ngang
+    // b la chieu doc
     static CONSOLE_FONT_INFOEX  fontex;
     fontex.cbSize = sizeof(CONSOLE_FONT_INFOEX);
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
