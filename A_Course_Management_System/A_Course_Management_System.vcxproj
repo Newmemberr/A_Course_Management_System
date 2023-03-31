@@ -133,6 +133,8 @@
     <ClCompile Include="ConsoleFunction.cpp" />
     <ClCompile Include="LoginFunction.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Management.cpp" />
+    <ClCompile Include="StaffMemberFunction.cpp" />
     <ClCompile Include="SupportFunction.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

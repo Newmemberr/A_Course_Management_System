@@ -1,6 +1,6 @@
 #include"MyLib.h"
 
-void Invisible_Cursor(bool k) // xoa dau nhay 
+void Show_Cursor(bool k) // xoa dau nhay 
 {
     CONSOLE_CURSOR_INFO Info;
     Info.bVisible = k;
@@ -37,7 +37,7 @@ void SetColor(string BG_Color, string Text_Color) // doi mau
 
 void ResetColor() //dat lai mau goc
 {
-    SetColor(Main_BG_Color, Main_Text_Color);
+    SetColor(Default_BG_Color, Default_Text_Color);
 }
 
 void Change_Text_Size(int a, int b)

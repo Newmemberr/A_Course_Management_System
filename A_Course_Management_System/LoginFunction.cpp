@@ -1,58 +1,69 @@
 #include"MyLib.h"
 int Main_Page()
 {
-	Draw_Border(27, 9, 17, 5, Main_BG_Color, Main_Text_Color);
+	Draw_Border(27, 9, 17, 5);
 	string s[3];
 	int your_choice = 0;
 
 	s[0] = "Sign In";
 	s[1] = "Sign Up";
-	s[2] = "  Exit  ";
-	your_choice = Choice1(s, 3, 32, 10, "white", "light blue", Main_BG_Color, Main_Text_Color);
-	return your_choice;
+	s[2] = " Exit  ";
+	your_choice = Choice(s, 3, 32, 10, "white", "blue");
+	switch (your_choice)
+	{
+		case 0:
+			return 1;
+		case 1:
+			return 2;
+		case 3:
+			return -1;
+		default:
+			return -1;
+	}
 }
 
-int SignIn_Page(int last_page)
+int SignIn_Page(int last_page, string& username, string& userjob)
 {
 	bool Wrong_Username = false;
 	bool Wrong_Password = false;
 
 here:
 
-	Transition_1();
+	Transition();
 
 	//ve khung-----------------------------
+	Write("Sign In:", 13, 3, Default_BG_Color, "blue");
 	if (Wrong_Username) //truong hop sai username
 	{
-		Write("Wrong Username", 27, 3, Main_BG_Color, "red");
+		Write("Wrong Username", 27, 3, Default_BG_Color, "red");
 		Wrong_Username = false;
-		Write("Username: ", 20, 5, Main_BG_Color, Main_Text_Color);
-		Draw_Border(30, 4, 20, 3, Main_BG_Color, "red");
+		Write("Username: ", 20, 5);
+		Draw_Border(30, 4, 20, 3, Default_BG_Color, "red");
 	}
 	else
 	{
-		Write("Username: ", 20, 5, Main_BG_Color, Main_Text_Color);
-		Draw_Border(30, 4, 20, 3, Main_BG_Color, Main_Text_Color);
+		Write("Username: ", 20, 5);
+		Draw_Border(30, 4, 20, 3);
 	}
 	if (Wrong_Password) //truong hop sai password
 	{
-		Write("Wrong Password", 27, 3, Main_BG_Color, "red");
+		Write("Wrong Password", 27, 3, Default_BG_Color, "red");
 		Wrong_Password = false;
-		Write("Password: ", 20, 8, Main_BG_Color, Main_Text_Color);
-		Draw_Border(30, 7, 20, 3, Main_BG_Color, "red");
+		Write("Password: ", 20, 8);
+		Draw_Border(30, 7, 20, 3, Default_BG_Color, "red");
 	}
 	else
 	{
-		Write("Password: ", 20, 8, Main_BG_Color, Main_Text_Color);
-		Draw_Border(30, 7, 20, 3, Main_BG_Color, Main_Text_Color);
+		Write("Password: ", 20, 8);
+		Draw_Border(30, 7, 20, 3);
 	}
 	//--------------------------
 
 	string s[3];
 
-	s[0] = "->   Sign in as a student   ";
-	s[1] = "-> Sign in as a staff member";
-	s[2] = "->         Go back          ";
+	s[0] = "   Sign in as a student   ";
+	s[1] = " Sign in as a staff member";
+	s[2] = "         Go back          ";
 
 	for (int i = 0;i < 3;i++)
 	{
@@ -60,46 +71,52 @@ here:
 	}
 	//----------------------------------------------------------
 	Gotoxy(31, 5);
-	Invisible_Cursor(TRUE);
-	string username; 
+	Show_Cursor(TRUE);
+ 
 	getline(cin,username); //Nhap username
 
 	Gotoxy(31, 8);
 	string password;
-	getline(cin,password); //Nhap password
-	Invisible_Cursor(FALSE);
+	char c;
+	while (true) //Nhap password
+	{
+		c = _getch();
+		if (c == 13) break;
+		else if (c == 8)
+		{
+			password.erase(password.end() - 1, password.end());
+			Gotoxy(31 + (int)password.size(), 8);
+			cout << " ";
+			Gotoxy(31 + (int)password.size(), 8);
+		}
+		else
+		{
+			password += c;
+			cout << "*";
+		}
+	}
+	Show_Cursor(FALSE);
 
 	int your_choice = 0;
-	your_choice = Choice1(s, 3, 25, 10, "white", "blue", Main_BG_Color, Main_Text_Color); //
+	your_choice = Choice(s, 3, 25, 10, "white", "blue"); //
 	if (your_choice == 2) return last_page;
 
 	//Phan loai kieu nguoi dung (student, staff_member)--------------------------------------------------------------//
-	string job;
-	if (your_choice == 0) job = "Student";
-	else if (your_choice == 1) job = "Staff_member";
+	if (your_choice == 0) userjob = "Student";
+	else if (your_choice == 1) userjob = "Staff_member";
 
 	//Ktra username--------------------------------
-	string temp = "Data\\" + job + "\\List_Of_User.TXT"; // open file
-	fstream list;
-	list.open(temp, ios::in);
-	while (list >> temp)
+	string link = "Data\\" + userjob + "\\List_Of_User.TXT"; // open file
+	
+	if (Check_If_String_Is_Existed(link, username))
 	{
-		if (temp == username)
-		{
-			list.close();
-			break;
-		}
-	}
-	if (list.is_open())
-	{
-		list.close();
 		Wrong_Username = true;
 		goto here;
 	}
+	
 	//-----------------------------------
-	string link = "Data\\" + job + "\\" + username + "\\Password.TXT"; // open file
-	fstream file;
-	file.open(link, ios::in);
+	link = "Data\\" + userjob + "\\" + username + "\\Password.TXT"; // open file
+	fstream file(link, ios::in);
 	string true_password;
 	file >> true_password;
 
@@ -110,43 +127,55 @@ here:
 		goto here;
 	}
 	file.close();
-	return 1; // di toi trang tiep theo
+
+	switch (your_choice) // di toi trang tiep theo
+	{
+		case 0:
+			return 3;
+		case 1:
+			return 4;
+		case 2:
+			return last_page;
+		default:
+			return -1;
+	}
 }
 
-int SignUp_Page(int last_page)
+int SignUp_Page(int last_page, string& username, string& userjob)
 {
 	bool valid_username = true;
 	bool valid_password = true;
 	bool existed_username = false;
 here:
 
-	Transition_1();
+	Transition();
+	Write("Sign Up:", 13, 3, Default_BG_Color, "blue");
 	//ve khung-----------------------------------------------------
 	if (!valid_username)
 	{
-		Write("Username is invalid", 27, 3, Main_BG_Color, "red");
+		Write("Username is invalid", 27, 3, Default_BG_Color, "red");
 		valid_username = true;
 	}
 	else if (existed_username)
 	{
-		Write("Username is existed", 27, 3, Main_BG_Color, "red");
+		Write("Username is existed", 27, 3, Default_BG_Color, "red");
 		existed_username = false;
 	}
 	else if (!valid_password)
 	{
-		Write("Password is invalid", 27, 3, Main_BG_Color, "red");
+		Write("Password is invalid", 27, 3, Default_BG_Color, "red");
 		valid_password = true;
 	}
-	Write("Username: ", 20, 5, Main_BG_Color, Main_Text_Color);
-	Draw_Border(30, 4, 20, 3, Main_BG_Color, Main_Text_Color);
-	Write("Password: ", 20, 8, Main_BG_Color, Main_Text_Color);
-	Draw_Border(30, 7, 20, 3, Main_BG_Color, Main_Text_Color);
+	Write("Username: ", 20, 5);
+	Draw_Border(30, 4, 20, 3);
+	Write("Password: ", 20, 8);
+	Draw_Border(30, 7, 20, 3);
 	//--------------------//
 	string s[3];
 
-	s[0] = "->   Sign in as a student   ";
-	s[1] = "-> Sign in as a staff member";
-	s[2] = "->         Go back          ";
+	s[0] = "   Sign in as a student   ";
+	s[1] = " Sign in as a staff member";
+	s[2] = "         Go back          ";
 
 	for (int i = 0;i < 3;i++)
 	{
@@ -155,23 +184,38 @@ here:
 	//---------------------------------------------------------
 	
 	Gotoxy(31, 5);
-	Invisible_Cursor(TRUE);
-	string username;
+	Show_Cursor(TRUE);
 	getline(cin, username); //Nhap username
 
 	Gotoxy(31, 8);
 	string password;
-	getline(cin,password); //Nhap password
+	char c;
+	while (true) //Nhap password
+	{
+		c = _getch();
+		if (c == 13) break;
+		else if (c == 8)
+		{
+			password.erase(password.end() - 1, password.end());
+			Gotoxy(31 + (int)password.size(), 8);
+			cout << " ";
+			Gotoxy(31 + (int)password.size(), 8);
+		}
+		else
+		{
+			password += c;
+			cout << "*";
+		}
+	}
 
-	Invisible_Cursor(FALSE);
+	Show_Cursor(FALSE);
 	//-------------------------------
 	int your_choice = 0;
-	your_choice = Choice1(s, 3, 25, 10, "white", "blue", Main_BG_Color, Main_Text_Color); //
+	your_choice = Choice(s, 3, 25, 10, "white", "blue"); 
 	if (your_choice == 2) return last_page;
 
-	string job;
-	if (your_choice == 0) job = "Student";
-	else if (your_choice == 1) job = "Staff_member";
+	if (your_choice == 0) userjob = "Student";
+	else if (your_choice == 1) userjob = "Staff_member";
 
 	// ktra username da ton tai hay chua va dua username vao list_of_users-------------------
 	for (int i = 0;i < username.size();i++) // ktra tinh hop le cua username
@@ -182,19 +226,12 @@ here:
 			goto here;
 		}
 	}
-	string link = "Data\\" + job + "\\List_Of_User.TXT"; // ktra username co ton tai hay chua
-	fstream file(link, ios::in);
-	string temp;
-	while (file >> temp)
+	string link = "Data\\" + userjob + "\\List_Of_User.TXT"; // ktra username co ton tai hay chua
+	if (Check_If_String_Is_Existed(link, username))
 	{
-		if (temp == username)
-		{
-			existed_username = true;
-			file.close();
-			goto here;
-		}
+		existed_username = true;
+		goto here;
 	}
-	file.close();
 	//---------------------------------------------------------------------
 	for (int i = 0;i < password.size();i++) //ktra tinh hop le cua password
 	{
@@ -205,17 +242,29 @@ here:
 		}
 	}
 	//-----------------------------------------
-	file.open(link, ios::out | ios::app);
+	fstream file(link, ios::out | ios::app);
 	file << (username + '\n'); // neu da hop le va chua ton tai thi ghi username vao file list_of_user
 	file.close();
 	//----------------------------------------------------------------------------//
-	// tao thu muc Data\job\username -----------------
-	temp = "MD Data\\" + job + "\\" + username;
+	// tao thu muc Data\userjob\username -----------------
+	string temp = "MD Data\\" + userjob + "\\" + username;
 	system(temp.c_str());
 	// tao file password.txt trong thu muc username
-	link = "Data\\" + job + "\\" + username+"\\Password.txt";
+	link = "Data\\" + userjob + "\\" + username+"\\Password.txt";
 	file.open(link, ios::out);
 	file << password; // ghi password vao file password.txt
 	file.close();
-	return your_choice;
+
+
+	switch (your_choice) // di toi trang tiep theo
+	{
+		case 0:
+			return 3;
+		case 1:
+			return 4;
+		case 2:
+			return last_page;
+		default:
+			return -1;
+	}
 }
