@@ -1,41 +1,89 @@
 #include"MyLib.h"
 int Management()
 {
-	int k = 0;
+	List History;
+	Create_List(History);
+	int num_Page = 0;
 	string username;
 	string userjob;
 	string link;
 	string current_school_year;
-	int classes_or_courses;
+	int classes_or_semester = 0;
 	while (true)
 	{
-		switch (k)
+		Push(History, num_Page);
+		switch (History.Node_Head->Data)
 		{
-			case -1:
+			case -2:
 			{
 				return 0;
 			}
+			case -1:
+			{
+				Pop(History); 
+				Pop(History);
+				num_Page = History.Node_Head->Data;
+				Pop(History);
+				break;
+			}
 			case 0:
 			{
-				k = Main_Page();
+				num_Page = Main_Page();
 				break;
 			}
 			case 1:
 			{
-				k = SignIn_Page(k, username, userjob);
+
+				num_Page = SignIn_Page(username, userjob);
 				link = "Data\\" + userjob + "\\" + username + "\\School_Year";
 				break;
 			}
 			case 2:
 			{
-				k = SignUp_Page(k, username, userjob);
+				num_Page = SignUp_Page(username, userjob);
 				link = "Data\\" + userjob + "\\" + username + "\\School_Year";
 				break;
 			}
 			case 3:
 			{
-				k = Begining_Of_A_School_Year_Page(k, link, classes_or_courses, current_school_year);
+				//student
+			}
+			case 4:
+			{
+				//staff member
+				num_Page = School_Years_Page(link, classes_or_semester, current_school_year);
 				break;
+			}
+			case 5:
+			{
+				//staff member
+				bool go_back = false;
+				string Class_Name;
+				int k = classes_or_semester;
+				while (true)
+				{
+					switch (k)
+					{
+						case 0:
+						{
+							//classes
+							k = Classes_Page(k, link, current_school_year, Class_Name);
+							break;
+						}
+						case 1:
+						{
+							//semester
+							break;
+						}
+
+					}
+					if (k == -1)
+					{
+						num_Page = -1;
+						break;
+					}
+				}
+				
 			}
 		}
 	}

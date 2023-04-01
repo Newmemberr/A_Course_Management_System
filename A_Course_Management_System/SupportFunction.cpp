@@ -154,3 +154,40 @@ void Sort_File(string link)
 	delete[] list;
 	return;
 }
+
+Node* Create_Node(int data)
+{
+	Node* temp = new Node;
+	temp->Data = data;
+	temp->pNext = NULL;
+	return temp;
+}
+int Create_List(List& New_List)
+{
+	New_List.Node_Head = NULL;
+	New_List.Node_Tail = NULL;
+	return 1;
+}
+bool Check_Empty(List& list)
+{
+	if (list.Node_Head == NULL) return true;
+	return false;
+}
+int Push(List& list, int data)
+{
+	Node* newnode = Create_Node(data);
+	Node* temp;
+	temp = list.Node_Head;
+
+	list.Node_Head = newnode;
+	newnode->pNext = temp;
+	return 1;
+}
+int Pop(List& list)
+{
+	if (Check_Empty(list)) return 1;
+	Node* temp = list.Node_Head->pNext;
+	delete list.Node_Head;
+	list.Node_Head = temp;
+	return 1;
+}

@@ -16,13 +16,13 @@ int Main_Page()
 		case 1:
 			return 2;
 		case 3:
-			return -1;
+			return -2;
 		default:
 			return -1;
 	}
 }
 
-int SignIn_Page(int last_page, string& username, string& userjob)
+int SignIn_Page(string& username, string& userjob)
 {
 	bool Wrong_Username = false;
 	bool Wrong_Password = false;
@@ -99,7 +99,7 @@ here:
 
 	int your_choice = 0;
 	your_choice = Choice(s, 3, 25, 10, "white", "blue"); //
-	if (your_choice == 2) return last_page;
+	if (your_choice == 2) return -1;
 
 	//Phan loai kieu nguoi dung (student, staff_member)--------------------------------------------------------------//
 	if (your_choice == 0) userjob = "Student";
@@ -108,18 +108,18 @@ here:
 	//Ktra username--------------------------------
 	string link = "Data\\" + userjob + "\\List_Of_User.TXT"; // open file
 	
-	if (Check_If_String_Is_Existed(link, username))
+	if (!Check_If_String_Is_Existed(link, username)) //ktra xem user name co ton tai hay khong
 	{
+		//neu khong ton tai username
 		Wrong_Username = true;
 		goto here;
 	}
-	
 	//-----------------------------------
 	link = "Data\\" + userjob + "\\" + username + "\\Password.TXT"; // open file
 	fstream file(link, ios::in);
 	string true_password;
 	file >> true_password;
-
+	
 	if (true_password != password) // ktra password
 	{
 		Wrong_Password = true;
@@ -127,21 +127,21 @@ here:
 		goto here;
 	}
 	file.close();
-
+	
 	switch (your_choice) // di toi trang tiep theo
 	{
 		case 0:
-			return 3;
+			return 3; //student
 		case 1:
-			return 4;
+			return 4; //staff member
 		case 2:
-			return last_page;
+			return -1; //go back
 		default:
-			return -1;
+			return -1; 
 	}
 }
 
-int SignUp_Page(int last_page, string& username, string& userjob)
+int SignUp_Page(string& username, string& userjob)
 {
 	bool valid_username = true;
 	bool valid_password = true;
@@ -212,10 +212,10 @@ here:
 	//-------------------------------
 	int your_choice = 0;
 	your_choice = Choice(s, 3, 25, 10, "white", "blue"); 
-	if (your_choice == 2) return last_page;
+	if (your_choice == 2) return -1;
 
 	if (your_choice == 0) userjob = "Student";
-	else if (your_choice == 1) userjob = "Staff_member";
+	else if (your_choice == 1) userjob = "Staff_Member";
 
 	// ktra username da ton tai hay chua va dua username vao list_of_users-------------------
 	for (int i = 0;i < username.size();i++) // ktra tinh hop le cua username
@@ -250,7 +250,7 @@ here:
 	string temp = "MD Data\\" + userjob + "\\" + username;
 	system(temp.c_str());
 	// tao file password.txt trong thu muc username
-	link = "Data\\" + userjob + "\\" + username+"\\Password.txt";
+	link = "Data\\" + userjob + "\\" + username+"\\Password.TXT";
 	file.open(link, ios::out);
 	file << password; // ghi password vao file password.txt
 	file.close();
@@ -259,11 +259,11 @@ here:
 	switch (your_choice) // di toi trang tiep theo
 	{
 		case 0:
-			return 3;
+			return 3; //student
 		case 1:
-			return 4;
+			return 4; // staff member
 		case 2:
-			return last_page;
+			return -1; // go back
 		default:
 			return -1;
 	}

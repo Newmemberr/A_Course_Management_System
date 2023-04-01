@@ -9,12 +9,16 @@
 using namespace std;
 
 //-------------------------Struct-----------------------------------------------------
-typedef struct
+struct Node
 {
-    int x; 
-    int y;
-} Pair;
-
+	int Data;
+	Node* pNext;
+};
+struct List
+{
+	Node* Node_Head;
+	Node* Node_Tail;
+};
 
 //------------------------ConsoleFnction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
@@ -43,17 +47,32 @@ bool Check_If_String_Is_Existed(string link, string s); // ktra xem 1 string co 
 
 void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
 
+// Link list function
+Node* Create_Node(int data); 
+int Create_List(List& New_List);
+bool Check_Empty(List& list);
+int Push(List& list, int data);
+int Pop(List& list);
+
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
 
 //------------------------LoginFunction.cpp------------------------------------------------------
 int Main_Page(); // No.00
 
-int SignIn_Page(int last_page, string& username, string& userjob); //No.01
+int SignIn_Page(string& username, string& userjob); //No.01
 
-int SignUp_Page(int last_page, string& username, string& userjob); //No.02
+int SignUp_Page(string& username, string& userjob); //No.02
 
 //-------------------------StaffMemberFunction.cpp-----------------------------------------------------
-int Begining_Of_A_School_Year_Page(int last_page, string link, int& classes_or_courses, string& current_school_year); // No.03
+int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // No.04
+
 void Create_New_School_Year(string link);
+
 int Classes_Or_Semester();
+
+int Classes_Page(int last_page, string link, string Current_School_Year, string& Class_Name); //No.05.0
+
+void Create_New_Class(string link_to_class);
+
+void Show_Student(string link_to_class, string current_class);
