@@ -13,13 +13,15 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 {
 	//Color_1: mau cua text khi duoc chon,
 	//Color_2: mau cua nhung text con lai
+	// 175 16 ,272
+	string Mark = ">> ";
 	int your_choice = 0;
 	SetColor(BG_Color_1, Text_Color_1);
-	Gotoxy(x, y); cout << s[0];
+	Gotoxy(x, y); cout << Mark << s[0];
 	SetColor(BG_Color_2, Text_Color_2);
 	for (int i = 1;i < sizeOfs;i++)
 	{
-		Gotoxy(x, y + i); cout << s[i];
+		Gotoxy(x, y + i); cout << Mark << s[i];
 	}
 
 	while (true)
@@ -33,9 +35,9 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 		{
 			if (your_choice > 0)
 			{
-				Write(s[your_choice], x, y + your_choice, BG_Color_2, Text_Color_2);
+				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_2, Text_Color_2);
 				your_choice -= 1;
-				Write(s[your_choice], x, y + your_choice, BG_Color_1, Text_Color_1);
+				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_1, Text_Color_1);
 			}
 			break;
 		}
@@ -43,9 +45,9 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 		{
 			if (your_choice < sizeOfs - 1)
 			{
-				Write(s[your_choice], x, y + your_choice, BG_Color_2, Text_Color_2);
+				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_2, Text_Color_2);
 				your_choice += 1;
-				Write(s[your_choice], x, y + your_choice, BG_Color_1, Text_Color_1);
+				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_1, Text_Color_1);
 			}
 			break;
 		}
@@ -56,7 +58,6 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 	}
 	ResetColor();
 }
-
 
 void Draw_Border(int x, int y, int a, int b, string BG_Color, string Text_Color)
 {
@@ -83,6 +84,7 @@ void Draw_Border(int x, int y, int a, int b, string BG_Color, string Text_Color)
 	Gotoxy(x+a, y+b); cout << char(188);
 	ResetColor();
 }
+
 void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 {
 	SetColor(Color, Color);
@@ -96,6 +98,7 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 	}
 	ResetColor();
 }
+
 void Transition() 
 {
 	Draw_Border(0, 0, 71, 19, Default_BG_Color, Default_Text_Color);
@@ -117,6 +120,7 @@ bool Check_If_String_Is_Existed(string link, string s)
 	file.close();
 	return false;
 }
+
 void Sort_File(string link)
 {
 	fstream file(link, ios::in);
@@ -155,39 +159,36 @@ void Sort_File(string link)
 	return;
 }
 
-Node* Create_Node(int data)
+int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color)
 {
-	Node* temp = new Node;
-	temp->Data = data;
-	temp->pNext = NULL;
-	return temp;
-}
-int Create_List(List& New_List)
-{
-	New_List.Node_Head = NULL;
-	New_List.Node_Tail = NULL;
-	return 1;
-}
-bool Check_Empty(List& list)
-{
-	if (list.Node_Head == NULL) return true;
-	return false;
-}
-int Push(List& list, int data)
-{
-	Node* newnode = Create_Node(data);
-	Node* temp;
-	temp = list.Node_Head;
+	char c = 0;
+	int page = 0;
+	for (int i = 0; i < 7 && i < sizeOfs;i++)
+	{
+		Write(s[i + page], x, y + i + page);
+	}
 
-	list.Node_Head = newnode;
-	newnode->pNext = temp;
-	return 1;
-}
-int Pop(List& list)
-{
-	if (Check_Empty(list)) return 1;
-	Node* temp = list.Node_Head->pNext;
-	delete list.Node_Head;
-	list.Node_Head = temp;
-	return 1;
+	while (true)
+	{
+		c = _getch();
+		if (c == -32)c = _getch();
+		
+		switch (c)
+		{
+			case 1:
+			{
+				page++;
+				if (page * 7 >= sizeOfs) page--;
+
+				for (int i = 0; i < 7 && i < sizeOfs;i++)
+				{
+					Write(s[i + page], x, y + i + page);
+				}
+				break;
+			}
+
+		}
+
+	}
+
 }

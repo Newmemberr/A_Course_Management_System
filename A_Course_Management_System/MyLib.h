@@ -9,17 +9,16 @@
 using namespace std;
 
 //-------------------------Struct-----------------------------------------------------
-struct Node
-{
-	int Data;
-	Node* pNext;
-};
-struct List
-{
-	Node* Node_Head;
-	Node* Node_Tail;
-};
 
+struct Student
+{
+	string Student_ID;
+	string First_Name;
+	string Last_Name;
+	string Gender;
+	string Date_Of_Birth;
+	string Social_ID;
+};
 //------------------------ConsoleFnction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
 
@@ -47,12 +46,11 @@ bool Check_If_String_Is_Existed(string link, string s); // ktra xem 1 string co 
 
 void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
 
-// Link list function
-Node* Create_Node(int data); 
-int Create_List(List& New_List);
-bool Check_Empty(List& list);
-int Push(List& list, int data);
-int Pop(List& list);
+int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color);
+
+
+// Student Function
+int Read_Student_Info(fstream& file, Student& a);
 
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
@@ -75,4 +73,16 @@ int Classes_Page(int last_page, string link, string Current_School_Year, string&
 
 void Create_New_Class(string link_to_class);
 
-void Show_Student(string link_to_class, string current_class);
+int Add_Or_View_Student();
+
+void View_Student(string link_to_current_class);
+
+int Read_Student_Info(fstream& file, Student& a);
+
+void Show_student_Info(Student& student, int x, int y);
+
+void Show_Students_in_a_Class(Student* student, int size, int x, int y, string BG_Color = Default_BG_Color, string Text_Color = Default_Text_Color);
+
+void Add_a_Student(string link_to_current_class);
+
+//void Add_a_List_of_Student(string link_to_current_class);

@@ -1,8 +1,6 @@
 #include"MyLib.h"
 int Management()
 {
-	List History;
-	Create_List(History);
 	int num_Page = 0;
 	string username;
 	string userjob;
@@ -11,20 +9,11 @@ int Management()
 	int classes_or_semester = 0;
 	while (true)
 	{
-		Push(History, num_Page);
-		switch (History.Node_Head->Data)
+		switch (num_Page)
 		{
-			case -2:
-			{
-				return 0;
-			}
 			case -1:
 			{
-				Pop(History); 
-				Pop(History);
-				num_Page = History.Node_Head->Data;
-				Pop(History);
-				break;
+				return 0;
 			}
 			case 0:
 			{
@@ -46,6 +35,8 @@ int Management()
 			}
 			case 3:
 			{
+				system("pause");
+				break;
 				//student
 			}
 			case 4:
@@ -79,7 +70,7 @@ int Management()
 					}
 					if (k == -1)
 					{
-						num_Page = -1;
+						num_Page = 4;
 						break;
 					}
 				}

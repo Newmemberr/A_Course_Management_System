@@ -1,22 +1,23 @@
 #include"MyLib.h"
 int Main_Page()
 {
+	Transition();
 	Draw_Border(27, 9, 17, 5);
 	string s[3];
 	int your_choice = 0;
 
 	s[0] = "Sign In";
 	s[1] = "Sign Up";
-	s[2] = " Exit  ";
-	your_choice = Choice(s, 3, 32, 10, "white", "blue");
+	s[2] = "Exit";
+	your_choice = Choice(s, 3, 30, 10, "white", "blue");
 	switch (your_choice)
 	{
 		case 0:
-			return 1;
+			return 1; // dang nhap
 		case 1:
-			return 2;
-		case 3:
-			return -2;
+			return 2; // dang ki
+		case 2:
+			return -1; // thoat
 		default:
 			return -1;
 	}
@@ -61,13 +62,13 @@ here:
 
 	string s[3];
 
-	s[0] = "   Sign in as a student   ";
-	s[1] = " Sign in as a staff member";
-	s[2] = "         Go back          ";
+	s[0] = "Sign in as a student";
+	s[1] = "Sign in as a staff member";
+	s[2] = "Go back";
 
 	for (int i = 0;i < 3;i++)
 	{
-		Gotoxy(25,10+i); cout << s[i];
+		Gotoxy(25,10+i); cout <<">> "<< s[i];
 	}
 	//----------------------------------------------------------
 	Gotoxy(31, 5);
@@ -99,12 +100,12 @@ here:
 
 	int your_choice = 0;
 	your_choice = Choice(s, 3, 25, 10, "white", "blue"); //
-	if (your_choice == 2) return -1;
+	if (your_choice == 2) return 0; // Main_Page
 
 	//Phan loai kieu nguoi dung (student, staff_member)--------------------------------------------------------------//
 	if (your_choice == 0) userjob = "Student";
 	else if (your_choice == 1) userjob = "Staff_member";
-
+	
 	//Ktra username--------------------------------
 	string link = "Data\\" + userjob + "\\List_Of_User.TXT"; // open file
 	
@@ -114,6 +115,7 @@ here:
 		Wrong_Username = true;
 		goto here;
 	}
+	
 	//-----------------------------------
 	link = "Data\\" + userjob + "\\" + username + "\\Password.TXT"; // open file
 	fstream file(link, ios::in);
@@ -127,15 +129,12 @@ here:
 		goto here;
 	}
 	file.close();
-	
 	switch (your_choice) // di toi trang tiep theo
 	{
 		case 0:
 			return 3; //student
 		case 1:
 			return 4; //staff member
-		case 2:
-			return -1; //go back
 		default:
 			return -1; 
 	}
@@ -173,13 +172,13 @@ here:
 	//--------------------//
 	string s[3];
 
-	s[0] = "   Sign in as a student   ";
-	s[1] = " Sign in as a staff member";
-	s[2] = "         Go back          ";
+	s[0] = "Sign up as a student";
+	s[1] = "Sign up as a staff member";
+	s[2] = "Go back";
 
 	for (int i = 0;i < 3;i++)
 	{
-		Gotoxy(25, 10 + i); cout << s[i];
+		Gotoxy(25, 10 + i); cout <<">> "<< s[i];
 	}
 	//---------------------------------------------------------
 	
@@ -194,7 +193,7 @@ here:
 	{
 		c = _getch();
 		if (c == 13) break;
-		else if (c == 8)
+		else if (c == 8) //xoa
 		{
 			password.erase(password.end() - 1, password.end());
 			Gotoxy(31 + (int)password.size(), 8);
@@ -212,7 +211,7 @@ here:
 	//-------------------------------
 	int your_choice = 0;
 	your_choice = Choice(s, 3, 25, 10, "white", "blue"); 
-	if (your_choice == 2) return -1;
+	if (your_choice == 2) return 0; //Main_Page
 
 	if (your_choice == 0) userjob = "Student";
 	else if (your_choice == 1) userjob = "Staff_Member";
@@ -246,8 +245,8 @@ here:
 	file << (username + '\n'); // neu da hop le va chua ton tai thi ghi username vao file list_of_user
 	file.close();
 	//----------------------------------------------------------------------------//
-	// tao thu muc Data\userjob\username -----------------
-	string temp = "MD Data\\" + userjob + "\\" + username;
+	// tao thu muc Data\userjob\username\School Year -----------------
+	string temp = "MD Data\\" + userjob + "\\" + username + "\\School_Year";
 	system(temp.c_str());
 	// tao file password.txt trong thu muc username
 	link = "Data\\" + userjob + "\\" + username+"\\Password.TXT";
@@ -262,8 +261,6 @@ here:
 			return 3; //student
 		case 1:
 			return 4; // staff member
-		case 2:
-			return -1; // go back
 		default:
 			return -1;
 	}
