@@ -77,8 +77,8 @@ void Create_New_School_Year(string link)
 		}
 	}
 
-	string link_to_file = link + "\\School_Year_List.TXT"; 
-	if (Check_If_String_Is_Existed(link_to_file, name))  //ktr xem co ton tai nam hoc giong nhau hay khong
+	string link_to_list = link + "\\School_Year_List.TXT"; 
+	if (Check_If_String_Is_Existed(link_to_list, name))  //ktr xem co ton tai nam hoc giong nhau hay khong
 	{
 		Write("This name is existed", 42, 9, "black", "white");
 		while (true)
@@ -87,7 +87,7 @@ void Create_New_School_Year(string link)
 			if (k == 13) return;
 		}
 	}
-	fstream file(link_to_file, ios::out | ios::app); 
+	fstream file(link_to_list, ios::out | ios::app); 
 	
 	file << (name + '\n'); //dua vao file
 	file.close();
@@ -99,7 +99,87 @@ void Create_New_School_Year(string link)
 	
 	string link_to_Classes_Directory = temp + "\\Classes"; // tao thu muc Classes trong muc new school year
 	system(link_to_Classes_Directory.c_str());
-	return;
+	// dua lop nam 2, 3, 4 vao thu muc classes
+	
+	Add_Old_Class_Into_New_School_Year(link, name);
+}
+int Add_Old_Class_Into_New_School_Year(string link, string current_school_year)
+{
+	// tach school name thanh 2 bien int school name 1 va 2
+	int school_year_1, school_year_2;
+	int index1 = 0;
+	string school_year;
+	while (index1 < current_school_year.size() && current_school_year[index1]!='-')
+	{
+		school_year += current_school_year[index1];
+		index1++;
+	}
+	school_year_1 = atoi(school_year);
+	index1++;
+	school_year = "";
+	while (index1 < current_school_year.size())
+	{
+		school_year += current_school_year[index1];
+		index1++;
+	}
+	school_year_2 = atoi(school_year);
+
+	string link_to_current_school_year = link + "\\" + current_school_year;
+	string link_to_current_class_list = link_to_current_school_year + "\\Classes\\Classes_List.TXT";
+	string link_to_school_year_list = link + "\\" + "School_Year_List.TXT";
+
+	fstream current_class_list(link_to_current_class_list, ios::out | ios::app); // mo file class_list hien tai
+	if (current_class_list.is_open())
+	{
+		fstream School_Year_List_File(link_to_school_year_list, ios::in); // mo file school_year_list
+		if (School_Year_List_File.is_open())
+		{
+			for (int i = 0;i < 3;i++)// lan luot duyet qua 3 nam trc do
+			{
+				school_year_1 -= 1;
+				school_year_2 -= 1;
+				school_year = itoa(school_year_1) + "-" + itoa(school_year_2); // school_year : ten cua nam hoc trc do
+
+				if (Check_If_String_Is_Existed(link_to_school_year_list, school_year)) // ktr xem nam hoc trc do co ton tai khong
+				{
+					string link_to_old_class_list = link + "\\" + school_year + "\\Classes\\Classes_List.TXT";
+					fstream old_class_list(link_to_old_class_list, ios::in); // mo file classes_list cua nam hoc trc do
+					if (old_class_list.is_open())
+					{
+						string old_class_name;
+						while (getline(old_class_list, old_class_name)) // doc cac lop tu file classes_list cua nam hoc trc do va luu vao bien old_class_name
+						{
+							current_class_list << (old_class_name + "\n"); // luu class nay vao lai current_class_list
+
+							string link_to_old_class = link + "\\" + school_year + "\\Classes\\" + old_class_name + ".TXT";
+							fstream old_class(link_to_old_class, ios::in); // mo cac class_file cu the
+							if (old_class.is_open())
+							{
+								string link_to_class = link_to_current_school_year + "\\Classes\\" + old_class_name + ".TXT";
+
+								fstream new_old_class(link_to_class, ios::out); // tao file moi cua old class trong nam hoc moi
+								if (new_old_class.is_open())
+								{
+									string temp;
+									while (getline(old_class, temp)) // chuyen du lieu cua lop cu sang file cua nam hoc moi 
+									{
+										new_old_class << temp << "\n";
+									}
+									new_old_class.close();
+								}
+								old_class.close();
+							}
+						}
+						old_class_list.close();
+					}
+				}
+
+			}
+			School_Year_List_File.close();
+		}
+		current_class_list.close();
+	}
+	return 1;
 }
 
 int Classes_Or_Semester()
@@ -163,8 +243,8 @@ here:
 	delete[] list;
 
 	if (k == 0) View_Student(link_to_current_class);
-	else if (k == 1) Add_a_Student(link_to_current_class);
-	//else if (k == 2) Add_a_List_of_Student(link_to_current_class);
+	else if (k == 1) Add_a_Student(link_to_current_class, 20, 5);
+	else if (k == 2) Add_a_List_of_Student(link_to_current_class, 15, 5);
 	goto here;
 
 	return 0;
@@ -254,9 +334,8 @@ void View_Student(string link_to_current_class)
 	}
 }
 
-void Add_a_Student(string link_to_current_class)
+void Add_a_Student(string link_to_current_class,int x, int y)
 {
-	int x = 20, y = 5;
 	Student student;
 	Draw_Space_Rectangle(x, y, 30, 8);
 	Draw_Border(x, y, 30, 8);
@@ -277,9 +356,22 @@ void Add_a_Student(string link_to_current_class)
 	Gotoxy(x + 16, y + 6); getline(cin, student.Social_ID);
 	Show_Cursor(false);
 
-	fstream file(link_to_current_class, ios::out | ios::app);
+	int cnt = 0;
+	string temp;
+	fstream file(link_to_current_class, ios::in);
 	if (file.is_open())
 	{
+		while (getline(file, temp))
+		{
+			cnt++;                          // dem so luong hoc sinh
+		}
+		file.close();
+	}
+
+	file.open(link_to_current_class, ios::out | ios::app); // dua du lieu vao file
+	if (file.is_open())
+	{
+		file << cnt + 1 << ",";
 		file << (student.Student_ID + ",");
 		file << (student.First_Name + ",");
 		file << (student.Last_Name + ",");
@@ -291,12 +383,81 @@ void Add_a_Student(string link_to_current_class)
 	}
 }
 
+void Add_a_List_of_Student(string link_to_current_class, int x, int y)
+{
+	string CSV_File_Link;
+	int cnt_csv = 0; // so hoc sinh trong file csv
+	int cnt_current_class = 0; // so hoc sinh trong file current class
+	Draw_Space_Rectangle(x, y, 40, 3);
+	Draw_Border(x, y, 40, 3);
+	Write("CSV File:", x+1, y+1);
+	Gotoxy(x + 11, y + 1); 
+
+	Show_Cursor(TRUE);
+	getline(cin, CSV_File_Link);     
+	Show_Cursor(false);
+
+	
+	for (int i = 0;i < CSV_File_Link.size();i++)
+	{
+		if (CSV_File_Link[i] == '\\')
+		{
+			CSV_File_Link.insert(CSV_File_Link.begin() + i, '\\');
+			i++;
+		}
+	}
+	fstream file(CSV_File_Link, ios::in);
+	if (file.is_open())
+	{
+		string temp;
+		while (getline(file, temp)) cnt_csv++; // dem so luong hoc sinh trong file csv
+		file.close();
+	}
+	Student* student = new Student[cnt_csv];
+
+	file.open(CSV_File_Link, ios::in);
+	if (file.is_open())
+	{
+		for (int i = 0;i < cnt_csv;i++)
+		{
+			Read_Student_Info(file, student[i]); // dua du lieu tu file csv vao mang student
+		}
+		file.close();
+	}
+
+	file.open(link_to_current_class, ios::in);
+	if (file.is_open())
+	{
+		string temp;
+		while (getline(file, temp)) cnt_current_class++;     //dem so hoc sinh cu trong class
+		file.close();
+	}
+	file.open(link_to_current_class, ios:: out | ios::app);
+	if (file.is_open())
+	{
+		for (int i = 0; i < cnt_csv; i++)                        // dua du lieu tu mang student vao file class.txt
+		{
+			file << i + 1 + cnt_current_class << ",";
+			file << (student[i].Student_ID + ",");
+			file << (student[i].First_Name + ",");
+			file << (student[i].Last_Name + ",");
+			file << (student[i].Gender + ",");
+			file << (student[i].Date_Of_Birth + ",");
+			file << (student[i].Social_ID);
+			file << '\n';
+		}
+		file.close();
+	}
+	return;
+}
+
 int Read_Student_Info(fstream& file, Student& a)
 {
 
 	if (file.is_open())
 	{
 		string temp;
+		getline(file, temp, ','); a.No = atoi(temp.c_str());
 		getline(file, a.Student_ID, ',');
 		getline(file, a.First_Name, ',');
 		getline(file, a.Last_Name, ',');
@@ -311,10 +472,11 @@ int Read_Student_Info(fstream& file, Student& a)
 void Show_student_Info(Student& student, int x, int y)
 {
 	Gotoxy(x, y);
+	printf("%3d ", student.No);
 	printf("%8s ", student.Student_ID.c_str());
 	printf("%8s ", student.First_Name.c_str());
 	printf("%8s ", student.Last_Name.c_str());
-	printf("%8s ", student.Gender.c_str());
+	printf("%4s ", student.Gender.c_str());
 	printf("%10s ", student.Date_Of_Birth.c_str());
 	printf("%8s ", student.Social_ID.c_str());
 	return;
@@ -338,21 +500,21 @@ void Show_Students_in_a_Class(Student* student, int size, int x, int y, string B
 	while (true)
 	{
 		c = _getch();
-		if (c == -32)c = _getch();
+		if (c == -32) c = _getch();
 
 		switch (c)
 		{
 			case 77:
 			{
 				page++;
-				if (page * 7 >= size)
+				if (page * Max_line >= size)
 				{
 					page--;
 					break;
 				}
 
 				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-				Draw_Border(x, y, 61, Max_line +2 );
+				Draw_Border(x, y, 61, Max_line + 2);
 				break;
 			}
 			case 75:
@@ -375,7 +537,7 @@ void Show_Students_in_a_Class(Student* student, int size, int x, int y, string B
 			}
 		}
 
-		for (int i = 0; i < Max_line && i < size;i++)
+		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
 			Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
 		}

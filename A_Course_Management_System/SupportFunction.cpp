@@ -192,3 +192,24 @@ int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Tex
 	}
 
 }
+int atoi(string s)
+{
+	while (s[0] == '0') s.erase(s.begin(), s.begin() + 1);
+	int ans = 0;
+	for (int i = 0;i < s.size();i++)
+	{
+		ans *= 10;
+		ans += int(s[i]) - 48;
+	}
+	return ans;
+}
+string itoa(int num)
+{
+	string ans;
+	while (num > 0)
+	{
+		ans = char(num % 10 + 48) + ans;
+		num /= 10;
+	}
+	return ans;
+}

@@ -3,6 +3,7 @@
 #include<time.h>
 #include<string>
 #include<conio.h>
+#include<cstring>
 #include<Windows.h> 
 #define Default_BG_Color "white"
 #define Default_Text_Color "black"
@@ -12,6 +13,7 @@ using namespace std;
 
 struct Student
 {
+	int No;
 	string Student_ID;
 	string First_Name;
 	string Last_Name;
@@ -48,9 +50,9 @@ void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
 
 int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color);
 
+int atoi(string s);
 
-// Student Function
-int Read_Student_Info(fstream& file, Student& a);
+string itoa(int num);
 
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
@@ -73,6 +75,8 @@ int Classes_Page(int last_page, string link, string Current_School_Year, string&
 
 void Create_New_Class(string link_to_class);
 
+int Add_Old_Class_Into_New_School_Year(string link, string current_school_year);
+
 int Add_Or_View_Student();
 
 void View_Student(string link_to_current_class);
@@ -83,6 +87,6 @@ void Show_student_Info(Student& student, int x, int y);
 
 void Show_Students_in_a_Class(Student* student, int size, int x, int y, string BG_Color = Default_BG_Color, string Text_Color = Default_Text_Color);
 
-void Add_a_Student(string link_to_current_class);
+void Add_a_Student(string link_to_current_class, int x, int y);
 
-//void Add_a_List_of_Student(string link_to_current_class);
+void Add_a_List_of_Student(string link_to_current_class, int x, int y);
