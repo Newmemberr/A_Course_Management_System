@@ -51,29 +51,23 @@ int Management()
 				bool go_back = false;
 				string Class_Name;
 				int k = classes_or_semester;
-				while (true)
+				switch (k)
 				{
-					switch (k)
-					{
-						case 0:
-						{
-							//classes
-							k = Classes_Page(k, link, current_school_year, Class_Name);
-							break;
-						}
-						case 1:
-						{
-							//semester
-							break;
-						}
-
-					}
-					if (k == -1)
-					{
-						num_Page = 4;
-						break;
-					}
+				case 0:
+				{
+					//classes
+					k = Classes_Page(link, current_school_year);
+					break;
 				}
+				case 1:
+				{
+					//semester
+					k = Semesters_Page(link, current_school_year);
+					break;
+				}
+				}
+				num_Page = 4;
+				break;
 				
 			}
 		}

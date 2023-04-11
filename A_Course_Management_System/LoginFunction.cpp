@@ -104,7 +104,7 @@ here:
 
 	//Phan loai kieu nguoi dung (student, staff_member)--------------------------------------------------------------//
 	if (your_choice == 0) userjob = "Student";
-	else if (your_choice == 1) userjob = "Staff_member";
+	else if (your_choice == 1) userjob = "Staff_Member";
 	
 	//Ktra username--------------------------------
 	string link = "Data\\" + userjob + "\\List_Of_User.TXT"; // open file

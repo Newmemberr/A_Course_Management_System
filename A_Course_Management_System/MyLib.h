@@ -45,6 +45,8 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color = Default_BG_
 void Transition(); 
 
 bool Check_If_String_Is_Existed(string link, string s); // ktra xem 1 string co ton  tai trong 1 file hay khong
+bool Check_If_String_Is_Existed(fstream& file, string s);
+bool Check_If_String_Is_Existed(string* list, int cnt, string s);
 
 void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
 
@@ -60,18 +62,18 @@ int Management();
 //------------------------LoginFunction.cpp------------------------------------------------------
 int Main_Page(); // No.00
 
-int SignIn_Page(string& username, string& userjob); //No.01
+int SignIn_Page(string& username, string& userjob); //P.01
 
-int SignUp_Page(string& username, string& userjob); //No.02
+int SignUp_Page(string& username, string& userjob); //P.02
 
 //-------------------------StaffMemberFunction.cpp-----------------------------------------------------
-int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // No.04
+int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // P.04
 
 void Create_New_School_Year(string link);
 
 int Classes_Or_Semester();
 
-int Classes_Page(int last_page, string link, string Current_School_Year, string& Class_Name); //No.05.0
+int Classes_Page(string link, string Current_School_Year); //P.05.0
 
 void Create_New_Class(string link_to_class);
 
@@ -90,3 +92,9 @@ void Show_Students_in_a_Class(Student* student, int size, int x, int y, string B
 void Add_a_Student(string link_to_current_class, int x, int y);
 
 void Add_a_List_of_Student(string link_to_current_class, int x, int y);
+
+int Semesters_Page(string link, string current_school_year);
+
+void Create_New_Semester(string link_to_Semester);
+
+void Courses_Page(string link_to_current_Semester);

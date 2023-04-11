@@ -121,6 +121,30 @@ bool Check_If_String_Is_Existed(string link, string s)
 	return false;
 }
 
+bool Check_If_String_Is_Existed(fstream& file, string s)
+{
+	string temp;
+	while (getline(file, temp))
+	{
+		if (temp == s)
+		{
+			file.close();
+			return true;
+		}
+	}
+	return false;
+}
+bool Check_If_String_Is_Existed(string* list, int cnt, string s)
+{
+	string temp;
+	for (int i = 0;i < cnt;i++)
+	{
+		if (list[i] == s)
+			return true;
+	}
+	return false;
+}
+
 void Sort_File(string link)
 {
 	fstream file(link, ios::in);
