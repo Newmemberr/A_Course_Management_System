@@ -620,7 +620,7 @@ here:
 
 		for (int i = 0; i < cnt;i++)
 		{
-			list[i] = "Semester " + itoa(i+1);
+			list[i] = "Semester_" + itoa(i+1);
 		}
 
 		list[cnt] = "Go back";
@@ -669,5 +669,5 @@ void Create_New_Semester(string link_to_Semester)
 
 void Courses_Page(string link_to_current_Semester)
 {
-
+	
 }

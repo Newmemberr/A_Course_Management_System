@@ -9,7 +9,8 @@ void Write(string s, int x, int y, string BG_Color, string Text_Color)
 	return;
 }
 
-int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_Color_1, string BG_Color_2, string Text_Color_2)
+//version 1
+int Choice1(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_Color_1, string BG_Color_2, string Text_Color_2)
 {
 	//Color_1: mau cua text khi duoc chon,
 	//Color_2: mau cua nhung text con lai
@@ -31,7 +32,7 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 		if (c == -32) c = _getch();
 		switch (c)
 		{
-		case 72:
+		case 72: 
 		{
 			if (your_choice > 0)
 			{
@@ -41,13 +42,109 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 			}
 			break;
 		}
-		case 80:
+		case 80: 
 		{
 			if (your_choice < sizeOfs - 1)
 			{
 				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_2, Text_Color_2);
 				your_choice += 1;
 				Write(Mark + s[your_choice], x, y + your_choice, BG_Color_1, Text_Color_1);
+			}
+			break;
+		}
+		case 13:
+			ResetColor();
+			return your_choice;
+		}
+	}
+	ResetColor();
+}
+// version 2
+int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_Color_1, string BG_Color_2, string Text_Color_2)
+{
+	//Color_1: mau cua text khi duoc chon,
+	//Color_2: mau cua nhung text con lai
+	// 175 16 ,272
+	string Mark = ">> ";
+	int Max_Line = 3;
+	int Current_Page = 0;
+	int Max_Page = (sizeOfs - 1) / Max_Line;
+	int your_choice = 0;
+
+	int Max_SizeOfSentence = 0;
+	for (int i = 0;i < sizeOfs;i++)
+	{
+		if (Max_SizeOfSentence < s[i].size()) Max_SizeOfSentence = (int)s[i].size(); // tim do dai lon nhat cua cac string trong s
+	}
+	Max_SizeOfSentence += (int)Mark.size();
+
+	SetColor(BG_Color_1, Text_Color_1);
+	Gotoxy(x, y); cout << Mark << s[0];
+	SetColor(BG_Color_2, Text_Color_2);
+	for (int i = 1;i < sizeOfs && i < Max_Line;i++)
+	{
+		Gotoxy(x, y + i); cout << Mark << s[i];
+	}
+
+	while (true)
+	{
+		char c;
+		c = _getch();
+		if (c == -32) c = _getch();
+		switch (c)
+		{
+		case 72: // up
+		{
+			if (your_choice > Current_Page * Max_Line)
+			{
+				Write(Mark + s[your_choice], x, y + your_choice - Max_Line * Current_Page, BG_Color_2, Text_Color_2);
+				your_choice -= 1;
+				Write(Mark + s[your_choice], x, y + your_choice - Max_Line * Current_Page, BG_Color_1, Text_Color_1);
+			}
+			else if (Current_Page > 0)
+			{
+				Draw_Space_Rectangle(x, y, Max_SizeOfSentence, Max_Line); // xoa nhung lua chon cu
+
+				your_choice -= 1;
+
+				//dua ra nhung lua chon moi
+				SetColor(BG_Color_1, Text_Color_1);
+				Gotoxy(x, y + Max_Line - 1); cout << Mark << s[Max_Line * Current_Page - 1];
+
+				Current_Page -= 1;
+				SetColor(BG_Color_2, Text_Color_2);
+				for (int i = 0;i + your_choice < sizeOfs && i < Max_Line - 1;i++)
+				{
+					Gotoxy(x, y + i); cout << Mark << s[i + Max_Line * Current_Page];
+				}
+			}
+			break;
+		}
+		case 80: //down
+		{
+			if (your_choice < sizeOfs - 1 && your_choice < (Current_Page + 1) * Max_Line - 1)
+			{
+				Write(Mark + s[your_choice], x, y + your_choice - Max_Line * Current_Page, BG_Color_2, Text_Color_2);
+				your_choice += 1;
+				Write(Mark + s[your_choice], x, y + your_choice - Max_Line * Current_Page, BG_Color_1, Text_Color_1);
+			}
+			else if (your_choice < sizeOfs - 1 && Current_Page < Max_Page)
+			{
+				Draw_Space_Rectangle(x, y, Max_SizeOfSentence, Max_Line); // xoa nhung lua chon cu
+
+				your_choice += 1;
+
+				Current_Page += 1;
+
+				//dua ra nhung lua chon moi
+				SetColor(BG_Color_1, Text_Color_1);
+				Gotoxy(x, y); cout << Mark << s[Max_Line * Current_Page];
+
+				SetColor(BG_Color_2, Text_Color_2);
+				for (int i = 1;i + your_choice < sizeOfs && i < Max_Line;i++)
+				{
+					Gotoxy(x, y + i); cout << Mark << s[i + Max_Line * Current_Page];
+				}
 			}
 			break;
 		}

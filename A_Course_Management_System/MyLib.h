@@ -21,6 +21,17 @@ struct Student
 	string Date_Of_Birth;
 	string Social_ID;
 };
+struct Course
+{
+	string ID;
+	string Name;
+	string Class;
+	string Teacher;
+	string Number_Of_Credits;
+	string Maximum_Student; // default 50
+	string Day_Of_Week;
+	string Session;
+};
 //------------------------ConsoleFnction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
 
