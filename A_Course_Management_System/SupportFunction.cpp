@@ -66,7 +66,8 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 	//Color_2: mau cua nhung text con lai
 	// 175 16 ,272
 	string Mark = ">> ";
-	int Max_Line = 3;
+	int Exit_Number = -1;
+	int Max_Line = 7;
 	int Current_Page = 0;
 	int Max_Page = (sizeOfs - 1) / Max_Line;
 	int your_choice = 0;
@@ -74,6 +75,7 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 	int Max_SizeOfSentence = 0;
 	for (int i = 0;i < sizeOfs;i++)
 	{
+		if (s[i] == "Go back") Exit_Number = i;
 		if (Max_SizeOfSentence < s[i].size()) Max_SizeOfSentence = (int)s[i].size(); // tim do dai lon nhat cua cac string trong s
 	}
 	Max_SizeOfSentence += (int)Mark.size();
@@ -148,9 +150,15 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 			}
 			break;
 		}
-		case 13:
+		case 27: //Esc
+		{
+			if (Exit_Number != -1) return Exit_Number;
+		}
+		case 13: // Enter
+		{
 			ResetColor();
 			return your_choice;
+		}
 		}
 	}
 	ResetColor();
@@ -194,6 +202,25 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 		}
 	}
 	ResetColor();
+}
+
+bool Draw_Error_Board(string Error, int x, int y, string Color)
+{
+	int a = (int)Error.size();
+	if (a < 15) a = 15;
+	a += 2;
+	int b = 4;
+
+	Draw_Space_Rectangle(x, y, a, b);
+	Draw_Border(x, y, a, b);
+	Write(Error, x + 1, y + 1, "white", Color);
+	Write("Continue? (Y/N)", x + 1, y + 2, "white", Color);
+	while (true)
+	{
+		char c = _getch();
+		if (toupper(c) == 'Y') return true;
+		else if (toupper(c) == 'N') return false;
+	}
 }
 
 void Transition() 

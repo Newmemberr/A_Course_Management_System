@@ -268,6 +268,7 @@ here:
 	if (k == 0) View_Student(link_to_current_class);
 	else if (k == 1) Add_a_Student(link_to_current_class, 20, 5);
 	else if (k == 2) Add_a_List_of_Student(link_to_current_class, 15, 5);
+	delete[] list;
 	goto here;
 
 	return 0;
@@ -594,7 +595,7 @@ here:
 
 		for (int i = 0; i < cnt;i++)
 		{
-			list[i] = "Semester " + itoa(i+1);
+			list[i] = "Semester_" + itoa(i+1);
 		}
 
 		list[cnt] = "Create new semester";
@@ -636,6 +637,7 @@ here:
 
 	string link_to_current_Semester = link_to_Semester + "\\" + list[your_choice];
 	Courses_Page(link_to_current_Semester);
+	delete[] list;
 	goto here;
 	return 0;
 }
@@ -669,5 +671,165 @@ void Create_New_Semester(string link_to_Semester)
 
 void Courses_Page(string link_to_current_Semester)
 {
+	string link_to_list = link_to_current_Semester + "\\Courses_List.TXT";
+
+here:
+
+	Transition();
+	string temp;
+	int cnt = 0;
+	fstream File_To_List(link_to_list, ios::in);
+	if (File_To_List.is_open())
+	{
+		while (getline(File_To_List, temp))
+		{
+			cnt++;                          // so luong khoa hoc da co
+		}
+		File_To_List.close();
+	}
+	string* ID_list = new string[cnt + 2];
+	string* Name_list = new string[cnt + 2];
+
+	File_To_List.open(link_to_list, ios::in);
+	if (File_To_List.is_open())
+	{
+		Name_list[0] = "Create new course";
+		string Course_ID = "";
+		string Course_Name = "";
+		for (int i = 1; getline(File_To_List, Course_ID);i++)
+		{
+			// Tim Course_Name tu file
+			string link_to_course_information = link_to_current_Semester + "\\" + Course_ID +"\\Information.TXT";
+			fstream file_to_course_information(link_to_course_information, ios::in);
+			if (file_to_course_information.is_open())
+			{
+				getline(file_to_course_information, temp);  // lay ra id
+				getline(file_to_course_information, temp); // lay ra ten
+				Course_Name = temp;
+				file_to_course_information.close();
+			}
+
+			ID_list[i] = Course_ID; // luu ID cua khoa hoc
+			Name_list[i] = Course_Name; // luu TEN cua khoa hoc vao list
+		}
+		File_To_List.close();
+		Name_list[cnt + 1] = "Go back";
+	}
 	
+	int your_choice = Choice(Name_list, cnt + 2, 25, 2, "white", "blue");
+
+	if (your_choice == 0) // create new course
+	{
+		Create_New_Course(link_to_current_Semester);
+		delete[] Name_list;
+		delete[] ID_list;
+		goto here;
+	}
+	if (your_choice == cnt + 1)  // quay tro ve 
+	{
+		delete[] Name_list;
+		delete[] ID_list;
+		return ;
+	}
+	string link_to_current_course = link_to_current_Semester + "\\" + ID_list[your_choice];
+	Work_With_Course(link_to_current_course);
+
+	delete[] Name_list;
+	delete[] ID_list;
+	goto here;
+}
+
+void Create_New_Course(string link_to_current_Semester)
+{
+here:
+
+	Transition();
+	Course New_Course;
+	//ve bang
+	int x = 20, y = 4;
+	Draw_Space_Rectangle(x, y, 40, 10);
+	Draw_Border(x, y, 40, 10);
+	x++;
+	y++;
+	Write("ID:", x, y);
+	Write("Name:", x, y + 1);
+	Write("Class:", x, y + 2);
+	Write("Teacher:", x, y + 3);
+	Write("Number of credits:", x, y + 4);
+	Write("Maximum number of students:", x, y + 5);
+	Write("Day:", x, y + 6);
+	Write("Session:", x, y + 7);
+	
+	// dien thong tin
+	Show_Cursor(true);
+	Gotoxy(x + 4, y); getline(cin, New_Course.ID);
+	Gotoxy(x + 6, y + 1); getline(cin, New_Course.Name);
+	Gotoxy(x + 7, y + 2); getline(cin, New_Course.Class);
+	Gotoxy(x + 9, y + 3); getline(cin, New_Course.Teacher);
+	Gotoxy(x + 19, y + 4); getline(cin, New_Course.Number_Of_Credits);
+	Gotoxy(x + 28, y + 5); getline(cin, New_Course.Maximum_Student);
+	Gotoxy(x + 5, y + 6); getline(cin, New_Course.Day_Of_Week);
+	Gotoxy(x + 9, y + 7); getline(cin, New_Course.Session);
+	Show_Cursor(false);
+
+	// kiem tra xem khoa hoc co ton tai hay chua
+	string temp;
+	string link_to_course_list = link_to_current_Semester + "\\Courses_List.TXT";
+	fstream file_to_course_list(link_to_course_list, ios::in);
+	if (file_to_course_list.is_open())
+	{
+		while (getline(file_to_course_list, temp))
+		{
+			if (temp == New_Course.ID)
+			{
+
+				if (Draw_Error_Board("Course is already existed", x + 4, y + 2))
+				{
+					Transition();
+					goto here;
+				}
+				else
+				{
+					return;
+				}
+			}
+		}
+		file_to_course_list.close();
+	}
+	// dua khoa hoc moi vao course list
+	file_to_course_list.open(link_to_course_list, ios::out | ios::app);
+	if (file_to_course_list.is_open())
+	{
+		file_to_course_list << New_Course.ID << "\n";
+		file_to_course_list.close();
+	}
+	//tao thu muc khoa hoc moi
+	string New_Course_Dir = "MD " + link_to_current_Semester + "\\" + New_Course.ID;
+	system(New_Course_Dir.c_str());
+	//tao file information va dua thong tin vao
+	string link_to_course_information = link_to_current_Semester + "\\" + New_Course.ID + "\\Information.TXT";
+	fstream file_to_course_information(link_to_course_information, ios::out);
+	if (file_to_course_information.is_open())
+	{
+		file_to_course_information << New_Course.ID << "\n";
+		file_to_course_information << New_Course.Name << "\n";
+		file_to_course_information << New_Course.Class << "\n";
+		file_to_course_information << New_Course.Teacher << "\n";
+		file_to_course_information << New_Course.Number_Of_Credits << "\n";
+		file_to_course_information << New_Course.Maximum_Student << "\n";
+		file_to_course_information << New_Course.Day_Of_Week << "\n";
+		file_to_course_information << New_Course.Session << "\n";
+		file_to_course_information.close();
+	}
+	//tao file student list
+	string link_to_course_student_list = link_to_current_Semester + "\\" + New_Course.ID + "\\Students_List.TXT";
+	fstream file_to_course_student_list(link_to_course_student_list, ios::out);
+	if (file_to_course_student_list.is_open())
+	{
+		file_to_course_student_list.close();
+	}
+}
+void Work_With_Course(string link_to_current_course)
+{
+	//nothing
 }

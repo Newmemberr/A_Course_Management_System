@@ -53,6 +53,8 @@ void Draw_Border(int x, int y, int a, int b, string BG_Color = Default_BG_Color,
 
 void Draw_Space_Rectangle(int x, int y, int a, int b, string Color = Default_BG_Color);
 
+bool Draw_Error_Board(string Error, int x, int y, string Color = "red");
+
 void Transition(); 
 
 bool Check_If_String_Is_Existed(string link, string s); // ktra xem 1 string co ton  tai trong 1 file hay khong
@@ -109,3 +111,7 @@ int Semesters_Page(string link, string current_school_year);
 void Create_New_Semester(string link_to_Semester);
 
 void Courses_Page(string link_to_current_Semester);
+
+void Create_New_Course(string link_to_current_Semester);
+
+void Work_With_Course(string link_to_current_course);
