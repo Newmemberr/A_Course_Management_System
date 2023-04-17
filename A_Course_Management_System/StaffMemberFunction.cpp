@@ -358,7 +358,7 @@ void View_Student(string link_to_current_class)
 	}
 }
 
-void Add_a_Student(string link_to_current_class,int x, int y)
+void Add_a_Student(string link_to_file,int x, int y)
 {
 	Student student;
 	Draw_Space_Rectangle(x, y, 30, 8);
@@ -382,7 +382,7 @@ void Add_a_Student(string link_to_current_class,int x, int y)
 
 	int cnt = 0;
 	string temp;
-	fstream file(link_to_current_class, ios::in);
+	fstream file(link_to_file, ios::in);
 	if (file.is_open())
 	{
 		while (getline(file, temp))
@@ -392,7 +392,7 @@ void Add_a_Student(string link_to_current_class,int x, int y)
 		file.close();
 	}
 
-	file.open(link_to_current_class, ios::out | ios::app); // dua du lieu vao file
+	file.open(link_to_file, ios::out | ios::app); // dua du lieu vao file
 	if (file.is_open())
 	{
 		file << cnt + 1 << ",";
@@ -407,7 +407,7 @@ void Add_a_Student(string link_to_current_class,int x, int y)
 	}
 }
 
-void Add_a_List_of_Student(string link_to_current_class, int x, int y)
+void Add_a_List_of_Student(string link_to_file, int x, int y)
 {
 	string CSV_File_Link;
 	int cnt_csv = 0; // so hoc sinh trong file csv
@@ -449,14 +449,14 @@ void Add_a_List_of_Student(string link_to_current_class, int x, int y)
 		file.close();
 	}
 
-	file.open(link_to_current_class, ios::in);
+	file.open(link_to_file, ios::in);
 	if (file.is_open())
 	{
 		string temp;
 		while (getline(file, temp)) cnt_current_class++;     //dem so hoc sinh cu trong class
 		file.close();
 	}
-	file.open(link_to_current_class, ios:: out | ios::app);
+	file.open(link_to_file, ios:: out | ios::app);
 	if (file.is_open())
 	{
 		for (int i = 0; i < cnt_csv; i++)                        // dua du lieu tu mang student vao file class.txt
@@ -506,7 +506,7 @@ void Show_student_Info(Student& student, int x, int y)
 	return;
 }
 
-void Show_Students_in_a_Class(Student* student, int size, int x, int y, string BG_Color, string Text_Color)
+void Show_Students_in_a_Class(Student* student, int size, int x, int y)
 {
 	Transition();
 	int Max_line = 7;
@@ -783,7 +783,7 @@ here:
 			if (temp == New_Course.ID)
 			{
 
-				if (Draw_Error_Board("Course is already existed", x + 4, y + 2))
+				if (Draw_Warning_Board("Course is already existed", x + 4, y + 2))
 				{
 					Transition();
 					goto here;
@@ -829,7 +829,281 @@ here:
 		file_to_course_student_list.close();
 	}
 }
+
 void Work_With_Course(string link_to_current_course)
 {
-	//nothing
+	string link_to_course_information = link_to_current_course + "\\Information.TXT";
+	string link_to_student_list = link_to_current_course + "\\Students_List.TXT";
+
+	int x = 20, y = 4;
+	string s[6];
+	s[0] = "Add a student";
+	s[1] = "Add a list of student";
+	s[2] = "Update course";
+	s[3] = "Remove a student";
+	s[4] = "Delete course";
+	s[5] = "Go back";
+
+	while (true)
+	{
+		Transition();
+
+		int your_choice = Choice(s, 6, x, y, "white", "blue");
+
+		switch (your_choice)
+		{
+			case 0:
+			{
+				Add_a_Student(link_to_student_list, 30, 6);
+				break;
+			}
+			case 1:
+			{
+				Add_a_List_of_Student(link_to_student_list, 20, 5);
+				break;
+			}
+			case 2:
+			{
+				//update
+			}
+			case 3:
+			{
+				int cnt = 0; string temp;
+				// doc so luong hoc sinh trong khoa hoc
+				fstream file_to_student_list(link_to_student_list, ios::in);
+				if (file_to_student_list.is_open())
+				{
+					while (getline(file_to_student_list, temp)) cnt++;
+					file_to_student_list.close();
+				}
+				Student* student = new Student[cnt];
+				// dua du lieu vao mang student
+				file_to_student_list.open(link_to_student_list, ios::in);
+				for (int i = 0;i < cnt;i++)
+				{
+					Read_Student_Info(file_to_student_list, student[i]);
+				}
+				Show_and_Delete_Students_in_a_Course(student, cnt, 5,3,"white", "blue");
+				Update_Student_List(link_to_student_list, student, cnt);
+				delete[] student;
+				break;
+			}
+			case 4:
+			{
+				Delete_Course(link_to_current_course);
+				return;
+			}
+			case 5:
+			{
+				return;
+			}
+		}
+	}
+
+} // thieu update information
+
+void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, int y, string BG_Color, string Text_Color)
+{
+	Transition();
+	int Max_line = 7;
+	int your_choice = 0;
+
+	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+	Draw_Border(x, y, 61, Max_line + 2);
+
+	char c = 0;
+	int page = 0;
+
+	SetColor(BG_Color, Text_Color);
+	Show_student_Info(student[0], x + 1, y + 1);
+	ResetColor();
+
+	for (int i = 1; i < Max_line && i < size;i++)
+	{
+		Show_student_Info(student[i], x + 1, y + i + 1);
+	}
+
+	while (true)
+	{
+		c = _getch();
+		if (c == -32) c = _getch();
+
+		switch (c)
+		{
+		case 77: //left
+		{
+			page++;
+			if (page * Max_line >= size)
+			{
+				page--;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+		}
+		case 75: //right
+		{
+			page--;
+			if (page < 0)
+			{
+				page++;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+
+		}
+		case 72: //up
+		{
+			if (your_choice > Max_line * page)
+			{
+				your_choice--;
+			}
+			break;
+		}
+		case 80: //down
+		{
+			if (your_choice < Max_line * (page + 1) - 1 )
+			{
+				your_choice++;
+			}
+			break;
+		}
+		case 13: //Enter
+		{
+			if (Draw_Warning_Board("Are you sure?", 25, 5))
+			{
+				Delete_Student(student, size, your_choice);
+			}
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+		}
+		case 27: //Esc
+		{
+			return;
+		}
+		}
+
+		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
+		{
+			if (i == your_choice - Max_line * page)
+			{
+				SetColor(BG_Color, Text_Color);
+				Show_student_Info(student[your_choice], x + 1, y + i + 1);
+				ResetColor();
+			}
+			else
+			{
+				Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
+			}
+			
+		}
+
+	}
+
+}
+
+void Delete_Student(Student*& student, int& cnt, int& index)
+{
+
+	Student* new_student = new Student[cnt];
+	for (int i = 0;i < index;i++)
+	{
+		new_student[i] = student[i];
+	}
+	for (int i = index + 1;i < cnt;i++)
+	{
+		new_student[i - 1] = student[i];
+	}
+	cnt--;
+	if (index == cnt) index--;
+	delete[] student;
+	student = new_student;
+}
+
+void Update_Student_List(string link_to_student_list, Student* student, int size)
+{
+	fstream file(link_to_student_list, ios::out | ios::trunc);
+	if (file.is_open())
+	{
+		for (int i = 0;i < size;i++)
+		{
+			file << i + 1 << ",";
+			file << (student[i].Student_ID + ",");
+			file << (student[i].First_Name + ",");
+			file << (student[i].Last_Name + ",");
+			file << (student[i].Gender + ",");
+			file << (student[i].Date_Of_Birth + ",");
+			file << (student[i].Social_ID);
+			file << '\n';
+		}
+		file.close();
+	}
+}
+
+void Delete_Course(string link_to_current_course)
+{
+	string temp;
+	string Current_Course_ID;
+	string link_to_course_information = link_to_current_course + "\\Information.TXT";
+	string link_to_student_list = link_to_current_course + "\\Students_List.TXT";
+	//doc course id
+	fstream file_to_student_information(link_to_course_information, ios::in);
+	if (file_to_student_information.is_open())
+	{
+		file_to_student_information >> Current_Course_ID;
+		file_to_student_information.close();
+	}
+
+	// xoa trong course_list
+	int cnt = 0;
+	string link_to_course_list = link_to_current_course + "\\..\\Courses_List.TXT";
+	fstream file_to_course_list(link_to_course_list, ios::in); // dem so luong khoa hoc
+	if (file_to_course_list.is_open())
+	{
+		while (getline(file_to_course_list, temp)) cnt++;
+		file_to_course_list.close();
+	}
+
+	string* Courses_ID = new string[cnt - 1];
+	file_to_course_list.open(link_to_course_list, ios::in); // luu id cac khoa hoc khac khoa hoc hien tai vao mang
+	if (file_to_course_list.is_open())
+	{
+		for (int i = 0;i < cnt - 1;i++)
+		{
+			getline(file_to_course_list, temp);
+			if (temp != Current_Course_ID)
+			{
+				Courses_ID[i] = temp;
+			}
+			else
+			{
+				i--;
+			}
+		}
+		file_to_course_list.close();
+	}
+	file_to_course_list.open(link_to_course_list, ios::out | ios::trunc); // luu id cac khoa hoc khac khoa hoc hien tai vao file
+	if (file_to_course_list.is_open())
+	{
+		for (int i = 0;i < cnt - 1;i++)
+		{
+			file_to_course_list << Courses_ID[i] << "\n";
+		}
+		file_to_course_list.close();
+	}
+	delete[] Courses_ID;
+
+	//xoa nhung thu muc khoa hoc
+	remove(link_to_course_information.c_str()); 
+	remove(link_to_student_list.c_str());
+	temp = "RD " + link_to_current_course;
+	system(temp.c_str());
+
+	
 }

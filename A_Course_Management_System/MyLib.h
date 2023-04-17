@@ -53,7 +53,7 @@ void Draw_Border(int x, int y, int a, int b, string BG_Color = Default_BG_Color,
 
 void Draw_Space_Rectangle(int x, int y, int a, int b, string Color = Default_BG_Color);
 
-bool Draw_Error_Board(string Error, int x, int y, string Color = "red");
+bool Draw_Warning_Board(string Sentence, int x, int y, string Color = "red");
 
 void Transition(); 
 
@@ -100,7 +100,7 @@ int Read_Student_Info(fstream& file, Student& a);
 
 void Show_student_Info(Student& student, int x, int y);
 
-void Show_Students_in_a_Class(Student* student, int size, int x, int y, string BG_Color = Default_BG_Color, string Text_Color = Default_Text_Color);
+void Show_Students_in_a_Class(Student* student, int size, int x, int y);
 
 void Add_a_Student(string link_to_current_class, int x, int y);
 
@@ -115,3 +115,11 @@ void Courses_Page(string link_to_current_Semester);
 void Create_New_Course(string link_to_current_Semester);
 
 void Work_With_Course(string link_to_current_course);
+
+void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, int y, string BG_Color = "white", string Text_Color = "black");
+
+void Delete_Student(Student*& student, int& cnt, int& index);
+
+void Update_Student_List(string link_to_student_list, Student* student, int size);
+
+void Delete_Course(string link_to_current_course);

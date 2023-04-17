@@ -204,16 +204,16 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 	ResetColor();
 }
 
-bool Draw_Error_Board(string Error, int x, int y, string Color)
+bool Draw_Warning_Board(string Sentence, int x, int y, string Color)
 {
-	int a = (int)Error.size();
+	int a = (int)Sentence.size();
 	if (a < 15) a = 15;
 	a += 2;
 	int b = 4;
 
 	Draw_Space_Rectangle(x, y, a, b);
 	Draw_Border(x, y, a, b);
-	Write(Error, x + 1, y + 1, "white", Color);
+	Write(Sentence, x + 1, y + 1, "white", Color);
 	Write("Continue? (Y/N)", x + 1, y + 2, "white", Color);
 	while (true)
 	{
