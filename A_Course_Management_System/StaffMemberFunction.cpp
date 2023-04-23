@@ -741,7 +741,6 @@ here:
 
 void Create_New_Course(string link_to_current_Semester)
 {
-here:
 
 	Transition();
 	Course New_Course;
@@ -782,16 +781,8 @@ here:
 		{
 			if (temp == New_Course.ID)
 			{
-
-				if (Draw_Warning_Board("Course is already existed", x + 4, y + 2))
-				{
-					Transition();
-					goto here;
-				}
-				else
-				{
-					return;
-				}
+				Draw_Error_Board("Course is already existed", x + 4, y + 2);
+				return;
 			}
 		}
 		file_to_course_list.close();
@@ -839,7 +830,7 @@ void Work_With_Course(string link_to_current_course)
 	string s[6];
 	s[0] = "Add a student";
 	s[1] = "Add a list of student";
-	s[2] = "Update course";
+	s[2] = "Update course information";
 	s[3] = "Remove a student";
 	s[4] = "Delete course";
 	s[5] = "Go back";
@@ -854,20 +845,25 @@ void Work_With_Course(string link_to_current_course)
 		{
 			case 0:
 			{
+				// them hoc sinh vao khoa hoc
 				Add_a_Student(link_to_student_list, 30, 6);
 				break;
 			}
 			case 1:
 			{
+				// them hoc sinh vao khoa hoc dung file csv
 				Add_a_List_of_Student(link_to_student_list, 20, 5);
 				break;
 			}
 			case 2:
 			{
-				//update
+				//update course info
+				Update_Course_Info(link_to_current_course);
+				break;
 			}
 			case 3:
 			{
+				//xoa hoc sinh ra khoi khoa hoc
 				int cnt = 0; string temp;
 				// doc so luong hoc sinh trong khoa hoc
 				fstream file_to_student_list(link_to_student_list, ios::in);
@@ -875,6 +871,11 @@ void Work_With_Course(string link_to_current_course)
 				{
 					while (getline(file_to_student_list, temp)) cnt++;
 					file_to_student_list.close();
+				}
+				if (cnt == 0)
+				{
+					Draw_Error_Board("This course has no student", 20, 5);
+					break;
 				}
 				Student* student = new Student[cnt];
 				// dua du lieu vao mang student
@@ -890,17 +891,147 @@ void Work_With_Course(string link_to_current_course)
 			}
 			case 4:
 			{
+				// xoa khoa hoc
 				Delete_Course(link_to_current_course);
 				return;
 			}
 			case 5:
 			{
+				// quay ve
 				return;
 			}
 		}
 	}
 
-} // thieu update information
+} 
+
+void Update_Course_Info(string& link_to_course)
+{
+	// luu thong tin khoa hoc vao bien course_info
+	string link_to_course_information = link_to_course + "\\Information.TXT";
+	string course_info[8];
+	fstream file_to_course_information(link_to_course_information, ios::in);
+	if (file_to_course_information.is_open())
+	{
+		for (int i = 0;i < 8;i++) file_to_course_information >> course_info[i];
+
+		file_to_course_information.close();
+	}
+	string Course_Old_ID = course_info[0]; // luu id khoa hoc
+	// ve bang
+	int x = 20, y = 4;
+	Draw_Space_Rectangle(x, y, 40, 10);
+	Draw_Border(x, y, 40, 10);
+	x++;
+	y++;
+	Write("ID: " + course_info[0], x, y);
+	Write("Name: " + course_info[1], x, y + 1);
+	Write("Class: " + course_info[2], x, y + 2);
+	Write("Teacher: " + course_info[3], x, y + 3);
+	Write("Number of credits: " + course_info[4], x, y + 4);
+	Write("Maximum number of students: " + course_info[5], x, y + 5);
+	Write("Day: " + course_info[6], x, y + 6);
+	Write("Session: " + course_info[7], x, y + 7);
+	// thao tac cua nguoi dung
+	int a[8]{ 4,6,7,9,19,28,5,9 };
+	Gotoxy(int(x + a[0] + course_info[0].size()), y);
+	Show_Cursor(true);
+	int your_choice = 0;
+	while (true)
+	{
+		char c = _getch();
+		if (c == -32) c = _getch();
+		switch (c)
+		{
+			case 72: //up
+			{
+				if (your_choice > 0)
+				{
+					your_choice--;
+					Gotoxy(int(x + a[your_choice] + course_info[your_choice].size()), y + your_choice);
+				}
+				break;
+			}
+			case 80: //down
+			{
+				if (your_choice < 8)
+				{
+					your_choice++;
+					Gotoxy(int(x + a[your_choice] + course_info[your_choice].size()), y + your_choice);
+				}
+				break;
+			}
+			case 8: //backspace
+			{
+				if (course_info[your_choice].size() > 0)
+				{
+					course_info[your_choice].erase(course_info[your_choice].end() - 1, course_info[your_choice].end()); //xoa du lieu
+
+					// hien thi lai du lieu moi
+					Gotoxy(int(x + a[your_choice] + course_info[your_choice].size()), y + your_choice);
+					cout << " ";
+					Gotoxy(int(x + a[your_choice] + course_info[your_choice].size()), y + your_choice);
+				}
+				break;
+			}
+			case 13: //Enter
+			{
+				// ktra xem ID sau khi sua co trung voi cac khoa hoc khac ko
+				string link_to_course_list = link_to_course + "\\..\\Courses_List.TXT";
+				if (course_info[0] != Course_Old_ID && Check_If_String_Is_Existed(link_to_course_list, course_info[0]))
+				{
+					
+					Draw_Error_Board("ID is already existed", 25, 7);
+					return;
+
+				}
+				// luu thong tin vao file
+				file_to_course_information.open(link_to_course_information, ios::out);
+				if (file_to_course_information.is_open())
+				{
+					for (int i = 0;i < 8;i++) file_to_course_information << course_info[i] << endl;
+
+					file_to_course_information.close();
+				}
+
+				if(Course_Old_ID != course_info[0]) // neu ID thay doi
+				{
+					string link_to_new_course = link_to_course + "\\..\\" + course_info[0];
+					// tao thu muc moi
+					string new_course_dir = "MD " + link_to_new_course;
+					system(new_course_dir.c_str());
+					//chuyen du lieu sang thu muc moi
+					Copy_File(link_to_course + "\\Information.TXT", link_to_new_course + "\\Information.TXT");
+					Copy_File(link_to_course + "\\Students_List.TXT", link_to_new_course + "\\Students_List.TXT");
+					//xoa thu muc cu
+					Delete_Course(link_to_course);
+					// Them id vao course_list
+					fstream file_to_course_list(link_to_course_list, ios::out | ios::app);
+					if (file_to_course_list.is_open())
+					{
+						file_to_course_list << course_info[0] << endl;
+						file_to_course_list.close();
+					}
+					// cap nhat bien link_to_course
+					while (link_to_course[link_to_course.size() - 1] != '\\') 
+						link_to_course.erase(link_to_course.end() - 1, link_to_course.end());
+					link_to_course += course_info[0];
+				}
+				Show_Cursor(false);
+				return;
+			}
+			default:
+			{
+				if (isalpha(c) || isdigit(c))
+				{
+					course_info[your_choice] += c;
+					Write(course_info[your_choice], x + int(a[your_choice]), y + your_choice);
+				}
+			}
+
+		}
+	}
+}
 
 void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, int y, string BG_Color, string Text_Color)
 {
@@ -1026,7 +1157,7 @@ void Delete_Student(Student*& student, int& cnt, int& index)
 	student = new_student;
 }
 
-void Update_Student_List(string link_to_student_list, Student* student, int size)
+void Update_Student_List(string link_to_student_list, Student* student, int size) 
 {
 	fstream file(link_to_student_list, ios::out | ios::trunc);
 	if (file.is_open())

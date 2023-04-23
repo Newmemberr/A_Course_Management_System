@@ -206,21 +206,34 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 
 bool Draw_Warning_Board(string Sentence, int x, int y, string Color)
 {
+	Sentence += " (Y/N)";
 	int a = (int)Sentence.size();
-	if (a < 15) a = 15;
 	a += 2;
 	int b = 4;
 
 	Draw_Space_Rectangle(x, y, a, b);
 	Draw_Border(x, y, a, b);
 	Write(Sentence, x + 1, y + 1, "white", Color);
-	Write("Continue? (Y/N)", x + 1, y + 2, "white", Color);
 	while (true)
 	{
 		char c = _getch();
 		if (toupper(c) == 'Y') return true;
 		else if (toupper(c) == 'N') return false;
 	}
+}
+
+void Draw_Error_Board(string Error, int x, int y, string Color)
+{
+	int a = (int)Error.size();
+	if (a < 25) a = 25;
+	a += 2;
+	int b = 4;
+
+	Draw_Space_Rectangle(x, y, a, b);
+	Draw_Border(x, y, a, b);
+	Write(Error, x + 1, y + 1, "white", Color);
+	Write("Press any key to continue", x + 1, y + 2, "white", Color);
+	_getch();
 }
 
 void Transition() 
@@ -305,6 +318,21 @@ void Sort_File(string link)
 	file.close();
 	delete[] list;
 	return;
+}
+
+void Copy_File(string link1, string link2) 
+{
+	fstream file1(link1, ios::in);
+	fstream file2(link2, ios::out);
+	if (!file1.is_open()) return;
+	if (!file2.is_open()) return;
+	string temp;
+	while (getline(file1, temp))
+	{
+		file2 << temp << endl;
+	}
+	file1.close();
+	file2.close();
 }
 
 int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color)

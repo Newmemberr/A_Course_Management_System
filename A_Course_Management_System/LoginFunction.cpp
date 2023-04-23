@@ -83,7 +83,7 @@ here:
 	{
 		c = _getch();
 		if (c == 13) break;
-		else if (c == 8)
+		else if (c == 8) // xoa
 		{
 			password.erase(password.end() - 1, password.end());
 			Gotoxy(31 + (int)password.size(), 8);

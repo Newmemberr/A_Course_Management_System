@@ -55,6 +55,8 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color = Default_BG_
 
 bool Draw_Warning_Board(string Sentence, int x, int y, string Color = "red");
 
+void Draw_Error_Board(string Error, int x, int y, string Color = "red");
+
 void Transition(); 
 
 bool Check_If_String_Is_Existed(string link, string s); // ktra xem 1 string co ton  tai trong 1 file hay khong
@@ -62,6 +64,8 @@ bool Check_If_String_Is_Existed(fstream& file, string s);
 bool Check_If_String_Is_Existed(string* list, int cnt, string s);
 
 void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
+
+void Copy_File(string link1, string link2); // copy du lieu tu link1 sang link2
 
 int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color);
 
@@ -106,7 +110,7 @@ void Add_a_Student(string link_to_current_class, int x, int y);
 
 void Add_a_List_of_Student(string link_to_current_class, int x, int y);
 
-int Semesters_Page(string link, string current_school_year);
+int Semesters_Page(string link, string current_school_year); //P.05.1
 
 void Create_New_Semester(string link_to_Semester);
 
@@ -116,10 +120,12 @@ void Create_New_Course(string link_to_current_Semester);
 
 void Work_With_Course(string link_to_current_course);
 
+void Update_Course_Info(string& link_to_course);
+
 void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, int y, string BG_Color = "white", string Text_Color = "black");
 
 void Delete_Student(Student*& student, int& cnt, int& index);
 
-void Update_Student_List(string link_to_student_list, Student* student, int size);
+void Update_Student_List(string link_to_student_list, Student* student, int size); // Luu student list vao lai file
 
 void Delete_Course(string link_to_current_course);
