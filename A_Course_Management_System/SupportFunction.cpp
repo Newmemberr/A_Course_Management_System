@@ -335,6 +335,23 @@ void Copy_File(string link1, string link2)
 	file2.close();
 }
 
+int Number_of_Line(string link)
+{
+	// dem so hoc sinh hien tai
+	int cnt = 0;
+	fstream file(link, ios::in);
+	if (file.is_open())
+	{
+		string temp;
+		while (getline(file, temp))
+		{
+			cnt++;                          // dem so luong hoc sinh
+		}
+		file.close();
+	}
+	return cnt;
+}
+
 int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color)
 {
 	char c = 0;

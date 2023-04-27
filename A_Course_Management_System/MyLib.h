@@ -67,6 +67,8 @@ void Sort_File(string link); // sap xep du lieu trong file theo chieu tang dan
 
 void Copy_File(string link1, string link2); // copy du lieu tu link1 sang link2
 
+int Number_of_Line(string link);
+
 int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Text_Color);
 
 int atoi(string s);

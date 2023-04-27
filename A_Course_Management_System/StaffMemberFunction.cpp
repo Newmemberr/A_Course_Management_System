@@ -330,12 +330,12 @@ int Add_Or_View_Student()
 	return your_choice;
 }
 
-void View_Student(string link_to_current_class)
+void View_Student(string link_to_file)
 {
 	Transition();
 	int cnt = 0;
 	string temp;
-	fstream file(link_to_current_class, ios::in);
+	fstream file(link_to_file, ios::in);
 	if (file.is_open())
 	{
 		while (getline(file, temp)) cnt++; // dem so luong hoc sinh
@@ -344,7 +344,7 @@ void View_Student(string link_to_current_class)
 	if (cnt > 0)
 	{
 		Student* student = new Student[cnt];
-		file.open(link_to_current_class, ios::in);
+		file.open(link_to_file, ios::in);
 		if (file.is_open())
 		{
 			for (int i = 0;i < cnt;i++)
@@ -356,6 +356,11 @@ void View_Student(string link_to_current_class)
 		}
 
 	}
+	else
+	{
+		Draw_Error_Board("No Data", 25, 7);
+		
+	}
 }
 
 void Add_a_Student(string link_to_file,int x, int y)
@@ -364,6 +369,18 @@ void Add_a_Student(string link_to_file,int x, int y)
 	Draw_Space_Rectangle(x, y, 30, 8);
 	Draw_Border(x, y, 30, 8);
 
+	int cnt = 0;
+	string temp;
+	fstream file(link_to_file, ios::in);
+	if (file.is_open())
+	{
+		while (getline(file, temp))
+		{
+			cnt++;                          // dem so luong hoc sinh
+		}
+		file.close();
+	}
+	
 	Write("Student ID   :", x + 1, y + 1);
 	Write("First Name   :", x + 1, y + 2);
 	Write("Last Name    :", x + 1, y + 3);
@@ -379,18 +396,6 @@ void Add_a_Student(string link_to_file,int x, int y)
 	Gotoxy(x + 16, y + 5); getline(cin, student.Date_Of_Birth);
 	Gotoxy(x + 16, y + 6); getline(cin, student.Social_ID);
 	Show_Cursor(false);
-
-	int cnt = 0;
-	string temp;
-	fstream file(link_to_file, ios::in);
-	if (file.is_open())
-	{
-		while (getline(file, temp))
-		{
-			cnt++;                          // dem so luong hoc sinh
-		}
-		file.close();
-	}
 
 	file.open(link_to_file, ios::out | ios::app); // dua du lieu vao file
 	if (file.is_open())
@@ -819,6 +824,13 @@ void Create_New_Course(string link_to_current_Semester)
 	{
 		file_to_course_student_list.close();
 	}
+	// tao file scoreboard
+	string link_to_scoreboard = link_to_current_Semester + "\\" + New_Course.ID + "\\Scoreboard.TXT";
+	fstream file_to_scoreboard(link_to_scoreboard, ios::out);
+	if (file_to_scoreboard.is_open())
+	{
+		file_to_scoreboard.close();
+	}
 }
 
 void Work_With_Course(string link_to_current_course)
@@ -826,52 +838,109 @@ void Work_With_Course(string link_to_current_course)
 	string link_to_course_information = link_to_current_course + "\\Information.TXT";
 	string link_to_student_list = link_to_current_course + "\\Students_List.TXT";
 
+	// doc tu file so luong hoc sinh toi da trong 1 khoa hoc
+	int Max_Student_in_Course = 0;
+	fstream file_to_course_information(link_to_course_information, ios::in);
+	if (file_to_course_information.is_open())
+	{
+		string temp;
+		for (int i = 0;i < 6;i++) getline(file_to_course_information, temp);
+		Max_Student_in_Course = atoi(temp);
+		file_to_course_information.close();
+	}
+	
+	// so luong hoc sinh hien tai trong khoa hoc
+	int number_of_student = Number_of_Line(link_to_student_list);
+
 	int x = 20, y = 4;
-	string s[6];
-	s[0] = "Add a student";
-	s[1] = "Add a list of student";
-	s[2] = "Update course information";
-	s[3] = "Remove a student";
-	s[4] = "Delete course";
-	s[5] = "Go back";
+	string s[7];
+	s[0] = "View all student in this course";
+	s[1] = "Add a student";
+	s[2] = "Add a list of student";
+	s[3] = "Update course information";
+	s[4] = "Remove a student";
+	s[5] = "Delete course";
+	s[6] = "Go back";
 
 	while (true)
 	{
 		Transition();
 
-		int your_choice = Choice(s, 6, x, y, "white", "blue");
+		int your_choice = Choice(s, 7, x, y, "white", "blue");
 
 		switch (your_choice)
 		{
 			case 0:
 			{
-				// them hoc sinh vao khoa hoc
-				Add_a_Student(link_to_student_list, 30, 6);
+				// hien thi tat ca hoc sinh
+				View_Student(link_to_student_list);
 				break;
 			}
 			case 1:
 			{
-				// them hoc sinh vao khoa hoc dung file csv
-				Add_a_List_of_Student(link_to_student_list, 20, 5);
+				// them hoc sinh vao khoa hoc
+				if (number_of_student == Max_Student_in_Course)
+				{
+					Draw_Error_Board("Course is full! ", 23, 7);
+				}
+				else
+				{
+					Add_a_Student(link_to_student_list, 30, 6);
+					number_of_student++;
+				}
 				break;
 			}
 			case 2:
+			{
+				// them hoc sinh vao khoa hoc dung file csv
+				Add_a_List_of_Student(link_to_student_list, 20, 5);
+				number_of_student = Number_of_Line(link_to_course_information);
+				if (number_of_student > Max_Student_in_Course)
+				{
+					Draw_Error_Board("Too many students are added into course", 23, 7);
+					Student* student = NULL;
+					fstream file_to_student_list(link_to_student_list, ios::in);
+					if (file_to_student_list.is_open())
+					{
+						
+						for (int i = 0;i < Max_Student_in_Course; i++)
+						{
+							Read_Student_Info(file_to_student_list, student[i]);
+						}
+						file_to_student_list.close();
+					}
+					file_to_student_list.open(link_to_student_list, ios::out, ios::trunc);
+					if (file_to_student_list.is_open())
+					{
+						for (int i = 0;i < Max_Student_in_Course; i++)
+						{
+							file_to_student_list << i << ",";
+							file_to_student_list << (student[i].Student_ID + ",");
+							file_to_student_list << (student[i].First_Name + ",");
+							file_to_student_list << (student[i].Last_Name + ",");
+							file_to_student_list << (student[i].Gender + ",");
+							file_to_student_list << (student[i].Date_Of_Birth + ",");
+							file_to_student_list << (student[i].Social_ID);
+							file_to_student_list << '\n';
+						}
+						file_to_student_list.close();
+					}
+				}
+				number_of_student = Max_Student_in_Course;
+				break;
+			}
+			case 3:
 			{
 				//update course info
 				Update_Course_Info(link_to_current_course);
 				break;
 			}
-			case 3:
+			case 4:
 			{
 				//xoa hoc sinh ra khoi khoa hoc
 				int cnt = 0; string temp;
 				// doc so luong hoc sinh trong khoa hoc
-				fstream file_to_student_list(link_to_student_list, ios::in);
-				if (file_to_student_list.is_open())
-				{
-					while (getline(file_to_student_list, temp)) cnt++;
-					file_to_student_list.close();
-				}
+				cnt = Number_of_Line(link_to_student_list);
 				if (cnt == 0)
 				{
 					Draw_Error_Board("This course has no student", 20, 5);
@@ -879,7 +948,7 @@ void Work_With_Course(string link_to_current_course)
 				}
 				Student* student = new Student[cnt];
 				// dua du lieu vao mang student
-				file_to_student_list.open(link_to_student_list, ios::in);
+				fstream file_to_student_list(link_to_student_list, ios::in);
 				for (int i = 0;i < cnt;i++)
 				{
 					Read_Student_Info(file_to_student_list, student[i]);
@@ -889,13 +958,15 @@ void Work_With_Course(string link_to_current_course)
 				delete[] student;
 				break;
 			}
-			case 4:
+			case 5:
 			{
 				// xoa khoa hoc
-				Delete_Course(link_to_current_course);
+				bool check = Draw_Warning_Board("Are you sure? ", 25, 7);
+				if (check == false) return;
+				else Delete_Course(link_to_current_course);
 				return;
 			}
-			case 5:
+			case 6:
 			{
 				// quay ve
 				return;
@@ -939,8 +1010,13 @@ void Update_Course_Info(string& link_to_course)
 	int your_choice = 0;
 	while (true)
 	{
+		bool isalphaordigit = true;
 		char c = _getch();
-		if (c == -32) c = _getch();
+		if (c == -32)
+		{
+			c = _getch();
+			isalphaordigit = false;
+		}
 		switch (c)
 		{
 			case 72: //up
@@ -1003,6 +1079,7 @@ void Update_Course_Info(string& link_to_course)
 					//chuyen du lieu sang thu muc moi
 					Copy_File(link_to_course + "\\Information.TXT", link_to_new_course + "\\Information.TXT");
 					Copy_File(link_to_course + "\\Students_List.TXT", link_to_new_course + "\\Students_List.TXT");
+					Copy_File(link_to_course + "\\Scoreboard.TXT", link_to_new_course + "\\Scoreboard.TXT");
 					//xoa thu muc cu
 					Delete_Course(link_to_course);
 					// Them id vao course_list
@@ -1022,6 +1099,7 @@ void Update_Course_Info(string& link_to_course)
 			}
 			default:
 			{
+				if (isalphaordigit == false) break;
 				if (isalpha(c) || isdigit(c))
 				{
 					course_info[your_choice] += c;
@@ -1183,6 +1261,7 @@ void Delete_Course(string link_to_current_course)
 	string Current_Course_ID;
 	string link_to_course_information = link_to_current_course + "\\Information.TXT";
 	string link_to_student_list = link_to_current_course + "\\Students_List.TXT";
+	string link_to_scoreboard = link_to_current_course + "\\Scoreboard.TXT";
 	//doc course id
 	fstream file_to_student_information(link_to_course_information, ios::in);
 	if (file_to_student_information.is_open())
@@ -1230,9 +1309,10 @@ void Delete_Course(string link_to_current_course)
 	}
 	delete[] Courses_ID;
 
-	//xoa nhung thu muc khoa hoc
+	//xoa thu muc khoa hoc
 	remove(link_to_course_information.c_str()); 
 	remove(link_to_student_list.c_str());
+	remove(link_to_scoreboard.c_str());
 	temp = "RD " + link_to_current_course;
 	system(temp.c_str());
 
