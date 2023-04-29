@@ -284,16 +284,11 @@ bool Check_If_String_Is_Existed(string* list, int cnt, string s)
 
 void Sort_File(string link)
 {
-	fstream file(link, ios::in);
+	
 	string temp;
-	int cnt = 0;
-	while (getline(file, temp))
-	{
-		cnt++;                           //dem so luong dong
-	}
-	file.close();
+	int cnt = Number_of_Line(link);//dem so luong dong
 
-	file.open(link, ios::in);
+	fstream file(link, ios::in);
 	string* list = new string[cnt];
 	for (int i = 0; i<cnt;i++) // dua du lieu tu file -> list
 	{
@@ -310,7 +305,7 @@ void Sort_File(string link)
 		}
 	}
 	file.close();
-	file.open(link, ios::out);
+	file.open(link, ios::out, ios::trunc);
 	for (int i = 0;i < cnt;i++)
 	{
 		file << (list[i] + '\n');

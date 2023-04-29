@@ -106,7 +106,7 @@ int Read_Student_Info(fstream& file, Student& a);
 
 void Show_student_Info(Student& student, int x, int y);
 
-void Show_Students_in_a_Class(Student* student, int size, int x, int y);
+void Show_Students(Student* student, int size, int x, int y);
 
 void Add_a_Student(string link_to_current_class, int x, int y);
 

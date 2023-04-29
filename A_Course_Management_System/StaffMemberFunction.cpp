@@ -224,19 +224,14 @@ int Classes_Page(string link, string Current_School_Year)
 here:
 
 	Transition();
-	fstream file(link_to_list, ios::in);
-	string temp;
 	int cnt = 0;
 
-	while (getline(file, temp))
-	{
-		cnt++;                          // so luong lop da co
-	}
-	file.close();
+	cnt = Number_of_Line(link_to_list);// so luong lop da co
 
 	string* list = new string[cnt + 2];
 
-	file.open(link_to_list, ios::in);
+	fstream file(link_to_list, ios::in);
+	string temp;
 	for (int i = 0; getline(file, temp);i++)
 	{
 		list[i] = temp; // luu du lieu vao list
@@ -251,7 +246,7 @@ here:
 	if (your_choice == cnt) // create new class
 	{
 		Create_New_Class(link_to_class);
-		Sort_File(link_to_class);
+		Sort_File(link_to_list);
 		delete[] list;
 		goto here;
 	}
@@ -268,7 +263,6 @@ here:
 	if (k == 0) View_Student(link_to_current_class);
 	else if (k == 1) Add_a_Student(link_to_current_class, 20, 5);
 	else if (k == 2) Add_a_List_of_Student(link_to_current_class, 15, 5);
-	delete[] list;
 	goto here;
 
 	return 0;
@@ -313,6 +307,10 @@ void Create_New_Class(string link_to_class)
 
 	string link_to_file = link_to_class + "\\" + name + ".TXT"; //tao file class.txt
 	file.open(link_to_file, ios::out);
+	if (file.is_open())
+	{
+		file << "No,Student ID,First Name,Last Name,Gender,Date of Birth,Social ID\n";
+	}
 	file.close();
 
 	return;
@@ -335,31 +333,27 @@ void View_Student(string link_to_file)
 	Transition();
 	int cnt = 0;
 	string temp;
-	fstream file(link_to_file, ios::in);
-	if (file.is_open())
-	{
-		while (getline(file, temp)) cnt++; // dem so luong hoc sinh
-		file.close();
-	}
+
+	cnt = Number_of_Line(link_to_file) - 1;// dem so luong hoc sinh
+	
 	if (cnt > 0)
 	{
 		Student* student = new Student[cnt];
-		file.open(link_to_file, ios::in);
+		fstream file(link_to_file, ios::in);
 		if (file.is_open())
 		{
+			getline(file, temp); // bo dong dau tien
 			for (int i = 0;i < cnt;i++)
 			{
 				Read_Student_Info(file, student[i]); // dua du lieu vao mang student
 			}
 			file.close();
-			Show_Students_in_a_Class(student, cnt, 5, 3); // show student
+			Show_Students(student, cnt, 5, 3); // show student
 		}
-
 	}
 	else
 	{
 		Draw_Error_Board("No Data", 25, 7);
-		
 	}
 }
 
@@ -371,15 +365,7 @@ void Add_a_Student(string link_to_file,int x, int y)
 
 	int cnt = 0;
 	string temp;
-	fstream file(link_to_file, ios::in);
-	if (file.is_open())
-	{
-		while (getline(file, temp))
-		{
-			cnt++;                          // dem so luong hoc sinh
-		}
-		file.close();
-	}
+	cnt = Number_of_Line(link_to_file) - 1;// dem so luong hoc sinh
 	
 	Write("Student ID   :", x + 1, y + 1);
 	Write("First Name   :", x + 1, y + 2);
@@ -397,7 +383,7 @@ void Add_a_Student(string link_to_file,int x, int y)
 	Gotoxy(x + 16, y + 6); getline(cin, student.Social_ID);
 	Show_Cursor(false);
 
-	file.open(link_to_file, ios::out | ios::app); // dua du lieu vao file
+	fstream file(link_to_file, ios::out | ios::app); // dua du lieu vao file
 	if (file.is_open())
 	{
 		file << cnt + 1 << ",";
@@ -435,32 +421,28 @@ void Add_a_List_of_Student(string link_to_file, int x, int y)
 			i++;
 		}
 	}
+	// bo dong dau tien
+	// dem so luong hoc sinh trong file csv
+	cnt_csv = Number_of_Line(CSV_File_Link) - 1;
+	
+	Student* student = new Student[cnt_csv];
+	
 	fstream file(CSV_File_Link, ios::in);
 	if (file.is_open())
 	{
 		string temp;
-		while (getline(file, temp)) cnt_csv++; // dem so luong hoc sinh trong file csv
-		file.close();
-	}
-	Student* student = new Student[cnt_csv];
-
-	file.open(CSV_File_Link, ios::in);
-	if (file.is_open())
-	{
+		getline(file, temp); // bo dong dau tien
+		
 		for (int i = 0;i < cnt_csv;i++)
 		{
 			Read_Student_Info(file, student[i]); // dua du lieu tu file csv vao mang student
 		}
 		file.close();
+		
 	}
-
-	file.open(link_to_file, ios::in);
-	if (file.is_open())
-	{
-		string temp;
-		while (getline(file, temp)) cnt_current_class++;     //dem so hoc sinh cu trong class
-		file.close();
-	}
+	//dem so hoc sinh cu trong class
+	cnt_current_class = Number_of_Line(link_to_file) - 1;
+	
 	file.open(link_to_file, ios:: out | ios::app);
 	if (file.is_open())
 	{
@@ -482,7 +464,6 @@ void Add_a_List_of_Student(string link_to_file, int x, int y)
 
 int Read_Student_Info(fstream& file, Student& a)
 {
-
 	if (file.is_open())
 	{
 		string temp;
@@ -496,7 +477,7 @@ int Read_Student_Info(fstream& file, Student& a)
 	}
 	else return 0;
 	return 1;
-} 
+}
 
 void Show_student_Info(Student& student, int x, int y)
 {
@@ -511,7 +492,7 @@ void Show_student_Info(Student& student, int x, int y)
 	return;
 }
 
-void Show_Students_in_a_Class(Student* student, int size, int x, int y)
+void Show_Students(Student* student, int size, int x, int y)
 {
 	Transition();
 	int Max_line = 7;
@@ -683,19 +664,12 @@ here:
 	Transition();
 	string temp;
 	int cnt = 0;
-	fstream File_To_List(link_to_list, ios::in);
-	if (File_To_List.is_open())
-	{
-		while (getline(File_To_List, temp))
-		{
-			cnt++;                          // so luong khoa hoc da co
-		}
-		File_To_List.close();
-	}
+	cnt = Number_of_Line(link_to_list);// so luong khoa hoc da co
+	
 	string* ID_list = new string[cnt + 2];
 	string* Name_list = new string[cnt + 2];
 
-	File_To_List.open(link_to_list, ios::in);
+	fstream File_To_List(link_to_list, ios::in);
 	if (File_To_List.is_open())
 	{
 		Name_list[0] = "Create new course";
@@ -822,6 +796,7 @@ void Create_New_Course(string link_to_current_Semester)
 	fstream file_to_course_student_list(link_to_course_student_list, ios::out);
 	if (file_to_course_student_list.is_open())
 	{
+		file_to_course_student_list << "No,Student ID,First Name,Last Name,Gender,Date of Birth,Social ID\n";
 		file_to_course_student_list.close();
 	}
 	// tao file scoreboard
@@ -829,6 +804,7 @@ void Create_New_Course(string link_to_current_Semester)
 	fstream file_to_scoreboard(link_to_scoreboard, ios::out);
 	if (file_to_scoreboard.is_open())
 	{
+		file_to_scoreboard << "No,Student ID,Student Full Name,Total Mark,Final Mark,Midterm Mark,Other Mark\n";
 		file_to_scoreboard.close();
 	}
 }
@@ -894,27 +870,32 @@ void Work_With_Course(string link_to_current_course)
 			{
 				// them hoc sinh vao khoa hoc dung file csv
 				Add_a_List_of_Student(link_to_student_list, 20, 5);
-				number_of_student = Number_of_Line(link_to_course_information);
+				number_of_student = Number_of_Line(link_to_student_list);
 				if (number_of_student > Max_Student_in_Course)
 				{
 					Draw_Error_Board("Too many students are added into course", 23, 7);
-					Student* student = NULL;
+					Student* student = new Student[Max_Student_in_Course];
+					// dua 'Max_Student_in_Course' hoc sinh tu file vao mang student
 					fstream file_to_student_list(link_to_student_list, ios::in);
 					if (file_to_student_list.is_open())
 					{
-						
+						string temp;
+						getline(file_to_student_list, temp); // bo dong dau tien
+
 						for (int i = 0;i < Max_Student_in_Course; i++)
 						{
 							Read_Student_Info(file_to_student_list, student[i]);
 						}
 						file_to_student_list.close();
 					}
+					// dua du lieu tu mang student vao file
 					file_to_student_list.open(link_to_student_list, ios::out, ios::trunc);
 					if (file_to_student_list.is_open())
 					{
+						file_to_student_list << "No,Student ID,First Name,Last Name,Gender,Date of Birth,Social ID\n";
 						for (int i = 0;i < Max_Student_in_Course; i++)
 						{
-							file_to_student_list << i << ",";
+							file_to_student_list << i + 1 << ",";
 							file_to_student_list << (student[i].Student_ID + ",");
 							file_to_student_list << (student[i].First_Name + ",");
 							file_to_student_list << (student[i].Last_Name + ",");
@@ -925,6 +906,7 @@ void Work_With_Course(string link_to_current_course)
 						}
 						file_to_student_list.close();
 					}
+					delete[] student;
 				}
 				number_of_student = Max_Student_in_Course;
 				break;
@@ -940,7 +922,7 @@ void Work_With_Course(string link_to_current_course)
 				//xoa hoc sinh ra khoi khoa hoc
 				int cnt = 0; string temp;
 				// doc so luong hoc sinh trong khoa hoc
-				cnt = Number_of_Line(link_to_student_list);
+				cnt = Number_of_Line(link_to_student_list) - 1;
 				if (cnt == 0)
 				{
 					Draw_Error_Board("This course has no student", 20, 5);
@@ -949,6 +931,9 @@ void Work_With_Course(string link_to_current_course)
 				Student* student = new Student[cnt];
 				// dua du lieu vao mang student
 				fstream file_to_student_list(link_to_student_list, ios::in);
+
+				getline(file_to_student_list, temp); // bo dong dau tien
+
 				for (int i = 0;i < cnt;i++)
 				{
 					Read_Student_Info(file_to_student_list, student[i]);
@@ -1220,7 +1205,7 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 void Delete_Student(Student*& student, int& cnt, int& index)
 {
 
-	Student* new_student = new Student[cnt];
+	Student* new_student = new Student[cnt - 1];
 	for (int i = 0;i < index;i++)
 	{
 		new_student[i] = student[i];
@@ -1240,6 +1225,7 @@ void Update_Student_List(string link_to_student_list, Student* student, int size
 	fstream file(link_to_student_list, ios::out | ios::trunc);
 	if (file.is_open())
 	{
+		file << "No,Student ID,First Name,Last Name,Gender,Date of Birth,Social ID\n";
 		for (int i = 0;i < size;i++)
 		{
 			file << i + 1 << ",";
