@@ -115,7 +115,7 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 
 				Current_Page -= 1;
 				SetColor(BG_Color_2, Text_Color_2);
-				for (int i = 0;i + your_choice < sizeOfs && i < Max_Line - 1;i++)
+				for (int i = 0;i + Max_Line * Current_Page < sizeOfs && i < Max_Line - 1;i++)
 				{
 					Gotoxy(x, y + i); cout << Mark << s[i + Max_Line * Current_Page];
 				}
@@ -153,6 +153,7 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 		case 27: //Esc
 		{
 			if (Exit_Number != -1) return Exit_Number;
+			else break;
 		}
 		case 13: // Enter
 		{
@@ -399,5 +400,29 @@ string itoa(int num)
 		ans = char(num % 10 + 48) + ans;
 		num /= 10;
 	}
+	return ans;
+}
+double atod(string s)
+{
+	while (s[0] == '0') s.erase(s.begin(), s.begin() + 1);
+	double ans = 0;
+	int index = 0;
+	for (;index < s.size() && s[index] != '.';index++)
+	{
+		ans *= 10;
+		ans += int(s[index]) - 48;
+	}
+	index++;
+	double a = 0;
+	int size = 0;
+	for (;index < s.size();index++)
+	{
+		a *= 10;
+		size++;
+		a += int(s[index]) - 48;
+	}
+	for (int i = 0;i < size;i++)
+		a /= 10;
+	ans += a;
 	return ans;
 }

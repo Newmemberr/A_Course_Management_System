@@ -421,13 +421,20 @@ void Add_a_List_of_Student(string link_to_file, int x, int y)
 			i++;
 		}
 	}
+	fstream file(CSV_File_Link, ios::in);
+	if (file.fail())
+	{
+		Draw_Error_Board("Path is not exist", 23, 7);
+		return;
+	}
+	else file.close();
 	// bo dong dau tien
 	// dem so luong hoc sinh trong file csv
 	cnt_csv = Number_of_Line(CSV_File_Link) - 1;
 	
 	Student* student = new Student[cnt_csv];
 	
-	fstream file(CSV_File_Link, ios::in);
+	file.open(CSV_File_Link, ios::in);
 	if (file.is_open())
 	{
 		string temp;
@@ -824,25 +831,26 @@ void Work_With_Course(string link_to_current_course)
 		Max_Student_in_Course = atoi(temp);
 		file_to_course_information.close();
 	}
-	
-	// so luong hoc sinh hien tai trong khoa hoc
-	int number_of_student = Number_of_Line(link_to_student_list);
 
 	int x = 20, y = 4;
-	string s[7];
+	string s[11];
 	s[0] = "View all student in this course";
 	s[1] = "Add a student";
 	s[2] = "Add a list of student";
 	s[3] = "Update course information";
 	s[4] = "Remove a student";
-	s[5] = "Delete course";
-	s[6] = "Go back";
+	s[5] = "Export a list of students";
+	s[6] = "Import the scoreboard";
+	s[7] = "View scoreboard of a course";
+	s[8] = "Update student's result"; // chua xong
+	s[9] = "Delete course";
+	s[10] = "Go back";
 
 	while (true)
 	{
 		Transition();
 
-		int your_choice = Choice(s, 7, x, y, "white", "blue");
+		int your_choice = Choice(s, 11, x, y, "white", "blue");
 
 		switch (your_choice)
 		{
@@ -854,6 +862,8 @@ void Work_With_Course(string link_to_current_course)
 			}
 			case 1:
 			{
+				// so luong hoc sinh hien tai trong khoa hoc
+				int number_of_student = Number_of_Line(link_to_student_list) - 1;
 				// them hoc sinh vao khoa hoc
 				if (number_of_student == Max_Student_in_Course)
 				{
@@ -870,7 +880,8 @@ void Work_With_Course(string link_to_current_course)
 			{
 				// them hoc sinh vao khoa hoc dung file csv
 				Add_a_List_of_Student(link_to_student_list, 20, 5);
-				number_of_student = Number_of_Line(link_to_student_list);
+				// so luong hoc sinh hien tai trong khoa hoc
+				int number_of_student = Number_of_Line(link_to_student_list)-1;
 				if (number_of_student > Max_Student_in_Course)
 				{
 					Draw_Error_Board("Too many students are added into course", 23, 7);
@@ -896,11 +907,11 @@ void Work_With_Course(string link_to_current_course)
 						for (int i = 0;i < Max_Student_in_Course; i++)
 						{
 							file_to_student_list << i + 1 << ",";
-							file_to_student_list << (student[i].Student_ID + ",");
-							file_to_student_list << (student[i].First_Name + ",");
-							file_to_student_list << (student[i].Last_Name + ",");
-							file_to_student_list << (student[i].Gender + ",");
-							file_to_student_list << (student[i].Date_Of_Birth + ",");
+							file_to_student_list << student[i].Student_ID << ",";
+							file_to_student_list << student[i].First_Name << ",";
+							file_to_student_list << student[i].Last_Name << ",";
+							file_to_student_list << student[i].Gender << ",";
+							file_to_student_list << student[i].Date_Of_Birth << ",";
 							file_to_student_list << (student[i].Social_ID);
 							file_to_student_list << '\n';
 						}
@@ -915,6 +926,15 @@ void Work_With_Course(string link_to_current_course)
 			{
 				//update course info
 				Update_Course_Info(link_to_current_course);
+				// cap nhat lai bien Max_Student_in_Course
+				file_to_course_information.open(link_to_course_information, ios::in);
+				if (file_to_course_information.is_open())
+				{
+					string temp;
+					for (int i = 0;i < 6;i++) getline(file_to_course_information, temp);
+					Max_Student_in_Course = atoi(temp);
+					file_to_course_information.close();
+				}
 				break;
 			}
 			case 4:
@@ -945,13 +965,33 @@ void Work_With_Course(string link_to_current_course)
 			}
 			case 5:
 			{
+				Export_Students_List(link_to_current_course);
+				break;
+			}
+			case 6:
+			{
+				Import_Scoreboard(link_to_current_course);
+				break;
+			}
+			case 7:
+			{
+				Show_Scoreboard_and_Update(5, 2, link_to_current_course);
+				break;
+			}
+			case 8:
+			{
+				Show_Scoreboard_and_Update(5, 2, link_to_current_course);
+				break;
+			}
+			case 9:
+			{
 				// xoa khoa hoc
 				bool check = Draw_Warning_Board("Are you sure? ", 25, 7);
 				if (check == false) return;
 				else Delete_Course(link_to_current_course);
 				return;
 			}
-			case 6:
+			case 10:
 			{
 				// quay ve
 				return;
@@ -1239,6 +1279,197 @@ void Update_Student_List(string link_to_student_list, Student* student, int size
 		}
 		file.close();
 	}
+}
+
+void Export_Students_List(string current_course)
+{
+	Transition();
+	// ve khung
+	Draw_Space_Rectangle(18, 5, 20, 3);
+	Draw_Border(18, 5, 20, 3);
+	Write("Path: ", 19, 6);
+	// Nhap path
+	Gotoxy(19 + 6, 6); 
+	string path;
+	Show_Cursor(true);
+	getline(cin, path);
+	Show_Cursor(false);
+	// chuan hoa path
+	for (int i = 0;i < path.size();i++)
+	{
+		if (path[i] == '\\')
+		{
+			path.insert(path.begin() + i, '\\');
+			i++;
+		}
+	}
+	// tao file
+	string students_list_link = current_course + "\\Students_List.TXT";
+	fstream file_to_students_list(students_list_link, ios::in); // mo file luu du lieu danh sach hoc sinh
+	if (file_to_students_list.is_open())
+	{
+		// bo dong dau cua file student list 
+		string temp;
+		getline(file_to_students_list, temp);
+
+		fstream file_export(path, ios::out); // tao file export
+		if (file_export.is_open())
+		{
+			file_export << "No,Student ID,Student Full Name,Total Mark,Final Mark,Midterm Mark,Other Mark\n";
+			
+			while (getline(file_to_students_list, temp, '\n')) // tach va xu li tung dong
+			{
+				string attr[4]; // tao mang 4 string tuong trung cho No, ID, First, Last Name
+				int index = 0;
+				for (int i = 0;i < temp.size() && index < 4;i++) // xu li string temp
+				{
+					if (temp[i] == ',') 
+					{
+						index++;
+					}
+					else attr[index] += temp[i]; 
+				}
+				// dua vao file No, Student ID, Student Full Name
+				file_export << attr[0] << "," << attr[1] << "," << attr[2] << " " << attr[3] << endl;
+			}
+			file_export.close();
+		}
+		file_to_students_list.close();
+	}
+}
+
+void Import_Scoreboard(string current_course)
+{
+	Transition();
+	// ve khung
+	Draw_Space_Rectangle(18, 5, 20, 3);
+	Draw_Border(18, 5, 20, 3);
+	Write("Path: ", 19, 6);
+	// Nhap path
+	Gotoxy(19 + 6, 6);
+	string path;
+	Show_Cursor(true);
+	getline(cin, path);
+	Show_Cursor(false);
+	// chuan hoa path
+	for (int i = 0;i < path.size();i++)
+	{
+		if (path[i] == '\\')
+		{
+			path.insert(path.begin() + i, '\\');
+			i++;
+		}
+	}
+	// dua du lieu vao file scoreboard
+	string scoreboard = current_course + "\\Scoreboard.TXT";
+	Copy_File(path, scoreboard);
+}
+
+void Show_Scoreboard_and_Update(int x, int y,string current_course)
+{
+	Transition();
+	
+	string scoreboard_link = current_course + "\\Scoreboard.TXT";
+	int size = Number_of_Line(scoreboard_link) - 1;
+	
+	Student_Result* student = new Student_Result[size];
+	
+	fstream file(scoreboard_link, ios::in); // dua du lieu vao mang student
+	int index = 0;
+	if (file.is_open())
+	{
+		//bo dong dau
+		string temp;
+		getline(file, temp);
+		
+		while (index < size)
+		{
+			
+			getline(file, temp, ','); student[index].No = atoi(temp);
+			getline(file, temp, ','); student[index].Student_ID = temp;
+			getline(file, temp, ','); student[index].Full_Name = temp;
+			getline(file, temp, ','); student[index].Total_Mark = atod(temp);
+			getline(file, temp, ','); student[index].Final_Mark = atod(temp);
+			getline(file, temp, ','); student[index].Midterm_Mark = atod(temp);
+			getline(file, temp, '\n'); student[index].Other_Mark = atod(temp);
+			index++;
+		}
+		file.close();
+	}
+	
+
+	int Max_line = 7;
+
+	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+	Draw_Border(x, y, 61, Max_line + 2);
+
+	char c = 0;
+	int page = 0;
+	for (int i = 0; i < Max_line && i < size;i++)
+	{
+		Show_Student_Result(student[i], x + 1, y + i + 1);
+	}
+
+	while (true)
+	{
+		c = _getch();
+		if (c == -32) c = _getch();
+
+		switch (c)
+		{
+		case 77: // right
+		{
+			page++;
+			if (page * Max_line >= size)
+			{
+				page--;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+		}
+		case 75: // left
+		{
+			page--;
+			if (page < 0)
+			{
+				page++;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+
+		}
+		case 27: // Esc
+		{
+			return;
+		}
+		}
+
+		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
+		{
+			Show_Student_Result(student[i + Max_line * page], x + 1, y + i + 1);
+		}
+
+	}
+
+}
+
+void Show_Student_Result(Student_Result student, int x, int y)
+{
+	Gotoxy(x, y);
+	printf("%3d ", student.No);
+	printf("%8s ", student.Student_ID.c_str());
+	printf("%17s ", student.Full_Name.c_str());
+	printf("%.3f  ", student.Total_Mark);
+	printf("%.3f  ", student.Final_Mark);
+	printf("%.3f  ", student.Midterm_Mark);
+	printf("%.3f  ", student.Other_Mark);
+	return;
 }
 
 void Delete_Course(string link_to_current_course)

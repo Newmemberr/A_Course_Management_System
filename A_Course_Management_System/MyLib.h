@@ -21,6 +21,16 @@ struct Student
 	string Date_Of_Birth;
 	string Social_ID;
 };
+struct Student_Result
+{
+	int No;
+	string Student_ID;
+	string Full_Name;
+	double Total_Mark;
+	double Final_Mark;
+	double Midterm_Mark;
+	double Other_Mark;
+};
 struct Course
 {
 	string ID;
@@ -74,6 +84,8 @@ int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Tex
 int atoi(string s);
 
 string itoa(int num);
+
+double atod(string s);
 
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
@@ -129,5 +141,13 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 void Delete_Student(Student*& student, int& cnt, int& index);
 
 void Update_Student_List(string link_to_student_list, Student* student, int size); // Luu student list vao lai file
+
+void Export_Students_List(string current_course);
+
+void Import_Scoreboard(string current_course);
+
+void Show_Scoreboard_and_Update(int x, int y, string current_course);
+
+void Show_Student_Result(Student_Result student, int x, int y);
 
 void Delete_Course(string link_to_current_course);
