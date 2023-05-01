@@ -5,6 +5,7 @@
 #include<conio.h>
 #include<cstring>
 #include<Windows.h> 
+#include <sys/stat.h>
 #define Default_BG_Color "white"
 #define Default_Text_Color "black"
 using namespace std;
@@ -53,6 +54,8 @@ void ResetColor();
 void Change_Text_Size(int a, int b);
 
 //------------------------SupportFunction.cpp------------------------------------------------------
+void Create_Data();
+
 void Write(string s, int x, int y, string BG_Color = Default_BG_Color, string Text_Color = Default_Text_Color);
 
 //   di chuyen con tro chon theo phuong thang dung
@@ -86,6 +89,8 @@ int atoi(string s);
 string itoa(int num);
 
 double atod(string s);
+
+string dtoa(double num);
 
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
@@ -146,8 +151,12 @@ void Export_Students_List(string current_course);
 
 void Import_Scoreboard(string current_course);
 
-void Show_Scoreboard_and_Update(int x, int y, string current_course);
+void Show_Scoreboard(int x, int y, string current_course);
 
 void Show_Student_Result(Student_Result student, int x, int y);
 
 void Delete_Course(string link_to_current_course);
+
+void Show_and_Update_Student_Result(int x, int y, string link_to_current_course, string BG_Color = "white", string Text_Color = "black");
+
+void Update_Student_Result(int x, int y, Student_Result*& student, int size, int index);

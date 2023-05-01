@@ -1,4 +1,26 @@
 #include"MyLib.h"
+//tao thu muc Data
+void Create_Data()
+{
+	string s = "Data";
+	const char* my_dir = s.c_str();
+	struct stat info;
+	if (stat(my_dir, &info) == 0 && (info.st_mode & S_IFDIR) != 0) {
+		// Da ton tai cac file can thiet
+		return;
+	}
+	else {
+		// chua ton tai cac file can thiet
+		// tao cac file can thiet
+		system("MD Data\\Student");
+		fstream file1("Data\\Student\\List_Of_User.TXT", ios::out); 
+		file1.close();
+		system("MD Data\\Staff_Member");
+		fstream file2("Data\\Staff_Member\\List_Of_User.TXT", ios::out);
+		file2.close();
+	}
+}
+
 // Viet chu tai vi tri (x,y)
 void Write(string s, int x, int y, string BG_Color, string Text_Color)
 {
@@ -381,6 +403,7 @@ int View_Board(string* s, int sizeOfs, int x, int y, string BG_Color, string Tex
 	}
 
 }
+
 int atoi(string s)
 {
 	while (s[0] == '0') s.erase(s.begin(), s.begin() + 1);
@@ -424,5 +447,28 @@ double atod(string s)
 	for (int i = 0;i < size;i++)
 		a /= 10;
 	ans += a;
+	return ans;
+}
+string dtoa(double num)
+{
+	num *= 1000;
+	int size = 3;
+	while ((int)num % 10 == 0) 
+	{
+		num /= 10;
+		size--;
+	}
+	int a1 = (int)num % (int)pow(10, size);
+	int a2 = (int)num / (int)pow(10, size);
+	string ans;
+	if (size == 0)
+	{
+		ans = itoa(a2) + ".000";
+	}
+	else
+	{
+		ans = itoa(a2) + "." + itoa(a1);
+	}
+		
 	return ans;
 }

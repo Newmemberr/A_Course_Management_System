@@ -975,12 +975,12 @@ void Work_With_Course(string link_to_current_course)
 			}
 			case 7:
 			{
-				Show_Scoreboard_and_Update(5, 2, link_to_current_course);
+				Show_Scoreboard(5, 2, link_to_current_course);
 				break;
 			}
 			case 8:
 			{
-				Show_Scoreboard_and_Update(5, 2, link_to_current_course);
+				Show_and_Update_Student_Result(5, 2, link_to_current_course, "white", "blue");
 				break;
 			}
 			case 9:
@@ -1172,7 +1172,7 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 				page--;
 				break;
 			}
-
+			your_choice = page * Max_line;
 			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
 			Draw_Border(x, y, 61, Max_line + 2);
 			break;
@@ -1185,7 +1185,7 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 				page++;
 				break;
 			}
-
+			your_choice = page * Max_line;
 			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
 			Draw_Border(x, y, 61, Max_line + 2);
 			break;
@@ -1365,7 +1365,7 @@ void Import_Scoreboard(string current_course)
 	Copy_File(path, scoreboard);
 }
 
-void Show_Scoreboard_and_Update(int x, int y,string current_course)
+void Show_Scoreboard(int x, int y,string current_course)
 {
 	Transition();
 	
@@ -1423,11 +1423,12 @@ void Show_Scoreboard_and_Update(int x, int y,string current_course)
 			if (page * Max_line >= size)
 			{
 				page--;
-				break;
 			}
-
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
+			else
+			{
+				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+				Draw_Border(x, y, 61, Max_line + 2);
+			}
 			break;
 		}
 		case 75: // left
@@ -1436,13 +1437,13 @@ void Show_Scoreboard_and_Update(int x, int y,string current_course)
 			if (page < 0)
 			{
 				page++;
-				break;
 			}
-
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
+			else
+			{
+				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+				Draw_Border(x, y, 61, Max_line + 2);
+			}
 			break;
-
 		}
 		case 27: // Esc
 		{
@@ -1532,6 +1533,226 @@ void Delete_Course(string link_to_current_course)
 	remove(link_to_scoreboard.c_str());
 	temp = "RD " + link_to_current_course;
 	system(temp.c_str());
+}
 
-	
+void Show_and_Update_Student_Result(int x, int y, string link_to_current_course, string BG_Color, string Text_Color)
+{
+	Transition();
+	// luu du lieu tu file student result
+	string scoreboard_link = link_to_current_course + "\\Scoreboard.TXT";
+	int size = Number_of_Line(scoreboard_link) - 1;
+
+	Student_Result* student = new Student_Result[size];
+
+	fstream file(scoreboard_link, ios::in); // dua du lieu vao mang student
+	int index = 0;
+	if (file.is_open())
+	{
+		//bo dong dau
+		string temp;
+		getline(file, temp);
+
+		while (index < size)
+		{
+
+			getline(file, temp, ','); student[index].No = atoi(temp);
+			getline(file, temp, ','); student[index].Student_ID = temp;
+			getline(file, temp, ','); student[index].Full_Name = temp;
+			getline(file, temp, ','); student[index].Total_Mark = atod(temp);
+			getline(file, temp, ','); student[index].Final_Mark = atod(temp);
+			getline(file, temp, ','); student[index].Midterm_Mark = atod(temp);
+			getline(file, temp, '\n'); student[index].Other_Mark = atod(temp);
+			index++;
+		}
+		file.close();
+	}
+	// hien thi ra man hinh
+	int Max_line = 7;
+	int your_choice = 0;
+	// ve khung
+	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+	Draw_Border(x, y, 61, Max_line + 2);
+
+	char c = 0;
+	int page = 0;
+
+	// hien thi ra trang dau tien
+	SetColor(BG_Color, Text_Color);
+	Show_Student_Result(student[0], x + 1, y + 1);
+	ResetColor();
+	for (int i = 1; i < Max_line && i < size;i++)
+	{
+		Show_Student_Result(student[i], x + 1, y + i + 1);
+	}
+
+	while (true)
+	{
+		c = _getch();
+		if (c == -32) c = _getch();
+
+		switch (c)
+		{
+		case 77: //left
+		{
+			page++;
+			if (page * Max_line >= size)
+			{
+				page--;
+				break;
+			}
+			your_choice = page * Max_line;
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+		}
+		case 75: //right
+		{
+			page--;
+			if (page < 0)
+			{
+				page++;
+				break;
+			}
+			your_choice = page * Max_line;
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+
+		}
+		case 72: //up
+		{
+			if (your_choice > Max_line * page)
+			{
+				your_choice--;
+			}
+			break;
+		}
+		case 80: //down
+		{
+			if (your_choice < Max_line * (page + 1) - 1)
+			{
+				your_choice++;
+			}
+			break;
+		}
+		case 13: //Enter
+		{
+			Update_Student_Result(23 ,7, student, size, your_choice);
+			//ve lai bang
+			Transition();
+			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+			Draw_Border(x, y, 61, Max_line + 2);
+			break;
+		}
+		case 27: //Esc
+		{
+			// dua du lieu da sua vao file scoreboard
+			string link_to_scoreboard = link_to_current_course + "\\Scoreboard.TXT";
+			fstream Scoreboard_File(link_to_scoreboard, ios::out | ios::trunc);
+			if (Scoreboard_File.is_open())
+			{
+				Scoreboard_File << "No,Student ID,Student Full Name,Total Mark,Final Mark,Midterm Mark,Other Mark\n";
+				for (int i = 0;i < size;i++)
+				{
+					Scoreboard_File << student[i].No << ",";
+					Scoreboard_File << student[i].Student_ID << ",";
+					Scoreboard_File << student[i].Full_Name << ",";
+					Scoreboard_File << student[i].Total_Mark << ",";
+					Scoreboard_File << student[i].Final_Mark << ",";
+					Scoreboard_File << student[i].Midterm_Mark << ",";
+					Scoreboard_File << student[i].Other_Mark << "\n";
+				}
+				Scoreboard_File.close();
+			}
+			// thoat
+			return;
+		}
+		}
+
+		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
+		{
+			if (i == your_choice - Max_line * page)
+			{
+				SetColor(BG_Color, Text_Color);
+				Show_Student_Result(student[your_choice], x + 1, y + i + 1);
+				ResetColor();
+			}
+			else
+			{
+				Show_Student_Result(student[i + Max_line * page], x + 1, y + i + 1);
+			}
+
+		}
+
+	}
+}
+
+void Update_Student_Result(int x, int y, Student_Result*& student, int size, int index)
+{
+	double Mark[4];
+	Mark[0] = student[index].Total_Mark;
+	Mark[1] = student[index].Final_Mark;
+	Mark[2] = student[index].Midterm_Mark;
+	Mark[3] = student[index].Other_Mark;
+
+	//Ve khung
+	Draw_Space_Rectangle(x, y, 40, 8);
+	Draw_Border(x, y, 40, 8);
+	//hien thi ra man hinh
+	x++; y++;
+	Write("ID: " + student[index].Student_ID, x, y);
+	Write("Full Name: " + student[index].Full_Name, x, y + 1);
+	Write("Total Mark: " + dtoa(student[index].Total_Mark), x, y + 2);
+	Write("Final Mark: " + dtoa(student[index].Final_Mark), x, y + 3);
+	Write("Midterm Mark: " + dtoa(student[index].Midterm_Mark), x, y + 4);
+	Write("Other Mark: " + dtoa(student[index].Other_Mark), x, y + 5);
+
+	int a[4]{12,12,14,12 };
+
+	Gotoxy(int(x + a[0] + dtoa(Mark[0]).size()), y + 2);
+	Show_Cursor(true);
+
+	int choice = 0;
+	while (true)
+	{
+		char c = _getch();
+		if (c == -32) c = _getch();
+
+		switch (c)
+		{
+			case 72: // up
+			{
+				if (choice > 0) choice--;
+				break;
+			}
+			case 80: //down
+			{
+				if (choice < 4) choice++;
+				break;
+			}
+			case 8: //backspace
+			{
+				// an du lieu cu
+				Draw_Space_Rectangle(int(x + a[choice]), y + 2 + choice, (int)dtoa(Mark[choice]).size(), 1);
+				Gotoxy(int(x + a[choice]), y + 2 + choice);
+				//nhap du lieu moi
+				string temp;
+				getline(cin, temp);
+				// cap nhat du lieu moi
+				Mark[choice] = atod(temp);
+				break;
+			}
+			case 13: //enter
+			{
+				// cap nhat du lieu va thoat
+				student[index].Total_Mark = Mark[0];
+				student[index].Final_Mark = Mark[1];
+				student[index].Midterm_Mark = Mark[2];
+				student[index].Other_Mark = Mark[3];
+				Show_Cursor(false);
+				return;
+			}
+		}
+		Gotoxy(int(x + a[choice] + dtoa(Mark[choice]).size()), y + 2 + choice);
+	}
 }
