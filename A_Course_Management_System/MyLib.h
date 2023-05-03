@@ -102,6 +102,8 @@ int SignIn_Page(string& username, string& userjob); //P.01
 
 int SignUp_Page(string& username, string& userjob); //P.02
 
+void Get_Student_ID(string link_to_current_student);
+
 //-------------------------StaffMemberFunction.cpp-----------------------------------------------------
 int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // P.04
 

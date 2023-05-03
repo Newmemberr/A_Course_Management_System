@@ -258,10 +258,35 @@ here:
 	switch (your_choice) // di toi trang tiep theo
 	{
 		case 0:
+			Get_Student_ID("Data\\Student\\" + username);
 			return 3; //student
 		case 1:
 			return 4; // staff member
 		default:
 			return -1;
+	}
+}
+
+void Get_Student_ID(string link_to_current_student)
+{
+	// ve bang
+	int x = 13, y = 7;
+	Draw_Space_Rectangle(x, y, 35, 3);
+	Draw_Border(x, y, 35, 3);
+	x++; y++;
+	Write("Your Student ID: ", x, y);
+	// Nhap ID
+	string student_id;
+	Gotoxy(x + 17, y); 
+	Show_Cursor(true);
+	getline(cin, student_id);
+	Show_Cursor(false);
+	// luu du lieu vao file
+	string link_to_current_student_info = link_to_current_student + "\\Student_ID.TXT";
+	fstream file(link_to_current_student_info, ios::out);
+	if (file.is_open())
+	{
+		file << student_id;
+		file.close();
 	}
 }
