@@ -131,12 +131,12 @@ here:
 	file.close();
 	switch (your_choice) // di toi trang tiep theo
 	{
-		case 0:
-			return 3; //student
-		case 1:
-			return 4; //staff member
+		case 3:
+		{
+			return -1;
+		}
 		default:
-			return -1; 
+			return 6;
 	}
 }
 
@@ -253,40 +253,49 @@ here:
 	file.open(link, ios::out);
 	file << password; // ghi password vao file password.txt
 	file.close();
-
+	// nhap thong tin user
+	Get_User_Info("Data\\" + userjob + "\\" + username + "\\Information.TXT");
 
 	switch (your_choice) // di toi trang tiep theo
 	{
-		case 0:
-			Get_Student_ID("Data\\Student\\" + username);
-			return 3; //student
-		case 1:
-			return 4; // staff member
-		default:
+		case 3:
+		{
 			return -1;
+		}
+		default:
+			return 6;
 	}
 }
 
-void Get_Student_ID(string link_to_current_student)
+void Get_User_Info(string link)
 {
+	string info_attr[3]{ "ID:","Name:","Date of birth:" };
+	string info[3];
 	// ve bang
 	int x = 13, y = 7;
-	Draw_Space_Rectangle(x, y, 35, 3);
-	Draw_Border(x, y, 35, 3);
+	Draw_Space_Rectangle(x, y, 35, 5);
+	Draw_Border(x, y, 35, 5);
 	x++; y++;
-	Write("Your Student ID: ", x, y);
-	// Nhap ID
-	string student_id;
-	Gotoxy(x + 17, y); 
+	for (int i = 0;i < 3;i++)
+	{
+		Write(info_attr[i], x, y + i);
+	}
+	// Nhap thong tin
 	Show_Cursor(true);
-	getline(cin, student_id);
+	for (int i = 0;i < 3;i++)
+	{
+		Gotoxy(x + 1 + info_attr[i].size(), y + i);
+		getline(cin, info[i]);
+	}
 	Show_Cursor(false);
 	// luu du lieu vao file
-	string link_to_current_student_info = link_to_current_student + "\\Student_ID.TXT";
-	fstream file(link_to_current_student_info, ios::out);
+	fstream file(link, ios::out);
 	if (file.is_open())
 	{
-		file << student_id;
+		for (int i = 0;i < 3;i++)
+		{
+			file << info[i] << endl;
+		}
 		file.close();
 	}
 }

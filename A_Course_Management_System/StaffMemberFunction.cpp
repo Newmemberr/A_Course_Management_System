@@ -28,9 +28,8 @@ here:
 	file.close();
 
 	list[cnt] =     "Create new school year";
-	list[cnt + 1] = "Log Out";
-	list[cnt + 2] = "Quit";
-	int your_choice = Choice(list, cnt + 3, 25, 2, "white", "blue");
+	list[cnt + 1] = "Go back";
+	int your_choice = Choice(list, cnt + 2, 25, 2, "white", "blue");
 
 	if (your_choice == cnt) // create new school year
 	{
@@ -39,15 +38,10 @@ here:
 		delete[] list;
 		goto here;
 	}
-	if (your_choice == cnt + 1)  // tro ve trang dang nhap
+	if (your_choice == cnt + 1) // quay tro ve
 	{
 		delete[] list;
-		return 0;
-	}
-	if (your_choice == cnt + 2) // Thoat chuong trinh
-	{
-		delete[] list;
-		return -1; 
+		return 6; 
 	}
 	classes_or_courses = Classes_Or_Semester();
 	current_school_year =  list[your_choice];
@@ -174,27 +168,21 @@ int Add_Old_Class_Into_New_School_Year(string link, string current_school_year)
 							current_class_list << (old_class_name + "\n"); // luu class nay vao lai current_class_list
 							current_class_list.close();
 						}
-
-						string link_to_old_class = link + "\\" + school_year + "\\Classes\\" + old_class_name + ".TXT";
-						fstream old_class(link_to_old_class, ios::in); // mo cac class_file cu the
-						if (old_class.is_open())
+						// tao thu muc class o nam hoc moi
+						string link_to_new_class = link_to_current_school_year + "\\Classes\\" + old_class_name;
+						string create_link_to_new_class_dir = "MD " + link_to_new_class;
+						system(create_link_to_new_class_dir.c_str());
+						// Copy students_list tu nam hoc moi sang nam hoc cu
+						string link_to_old_class = link + "\\" + school_year + "\\Classes\\" + old_class_name;
+						Copy_File(link_to_old_class + "\\Students_List.TXT", link_to_new_class + "\\Students_List.TXT");
+						// tao file Scoreboard.TXT
+						string link_to_new_class_scoreboard = link_to_new_class + "\\Scoreboard.TXT";
+						fstream file_to_new_class_scoreboard(link_to_new_class_scoreboard, ios::out);
+						if (file_to_new_class_scoreboard.is_open())
 						{
-							string link_to_class = link_to_current_school_year + "\\Classes\\" + old_class_name + ".TXT";
-
-							fstream new_old_class(link_to_class, ios::out); // tao file moi cua old class trong nam hoc moi
-							if (new_old_class.is_open())
-							{
-								string temp;
-								while (getline(old_class, temp)) // chuyen du lieu cua lop cu sang file cua nam hoc moi 
-								{
-									new_old_class << temp << "\n";
-								}
-								new_old_class.close();
-							}
-							old_class.close();
+							file_to_new_class_scoreboard.close();
 						}
 					}
-					old_class_list.close();
 				}
 			}
 
@@ -257,7 +245,7 @@ here:
 	}
 	int k = Add_Or_View_Student();
 
-	string link_to_current_class = link_to_class + "\\" + list[your_choice] + ".TXT";
+	string link_to_current_class = link_to_class + "\\" + list[your_choice] + "\\Students_List.TXT";
 	delete[] list;
 
 	if (k == 0) View_Student(link_to_current_class);
@@ -301,18 +289,27 @@ void Create_New_Class(string link_to_class)
 		}
 	}
 	fstream file(link_to_list, ios::out | ios::app);
-
 	file << (name + '\n'); //dua vao file classes_list
 	file.close();
+	// tao thu muc lop hoc moi
+	string link_to_class_dir = "MD " + link_to_class + "\\" + name;
+	system(link_to_class_dir.c_str());
 
-	string link_to_file = link_to_class + "\\" + name + ".TXT"; //tao file class.txt
+	string link_to_file = link_to_class + "\\" + name + "\\Students_List.TXT"; //tao file Students_List.txt
 	file.open(link_to_file, ios::out);
 	if (file.is_open())
 	{
 		file << "No,Student ID,First Name,Last Name,Gender,Date of Birth,Social ID\n";
+		file.close();
 	}
-	file.close();
-
+	
+	// tao file scoreboard
+	link_to_file = link_to_class + "\\" + name + "\\Scoreboard.TXT";
+	file.open(link_to_file, ios::out);
+	if (file.is_open())
+	{
+		file.close();
+	}
 	return;
 }
 

@@ -95,6 +95,14 @@ string dtoa(double num);
 //------------------------Management.cpp------------------------------------------------------ 
 int Management();
 
+//-----------------------User_Info_Management--------------------------------------------------
+
+int Starting_Page(string link);
+
+void Change_Password(string link);
+
+void View_Profile_Infomation(string link);
+
 //------------------------LoginFunction.cpp------------------------------------------------------
 int Main_Page(); // No.00
 
@@ -102,7 +110,7 @@ int SignIn_Page(string& username, string& userjob); //P.01
 
 int SignUp_Page(string& username, string& userjob); //P.02
 
-void Get_Student_ID(string link_to_current_student);
+void Get_User_Info(string link_to_current_student);
 
 //-------------------------StaffMemberFunction.cpp-----------------------------------------------------
 int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // P.04

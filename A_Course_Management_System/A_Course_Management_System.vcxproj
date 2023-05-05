@@ -136,6 +136,7 @@
     <ClCompile Include="Management.cpp" />
     <ClCompile Include="StaffMemberFunction.cpp" />
     <ClCompile Include="SupportFunction.cpp" />
+    <ClCompile Include="User_Info_Management.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

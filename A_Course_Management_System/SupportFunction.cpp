@@ -341,8 +341,8 @@ void Sort_File(string link)
 void Copy_File(string link1, string link2) 
 {
 	fstream file1(link1, ios::in);
-	fstream file2(link2, ios::out);
 	if (!file1.is_open()) return;
+	fstream file2(link2, ios::out);
 	if (!file2.is_open()) return;
 	string temp;
 	while (getline(file1, temp))

@@ -67,8 +67,21 @@ int Management()
 				}
 				}
 				num_Page = 4;
+				break;	
+			}
+			case 6:
+			{
+				int temp = Starting_Page(link);
+				if (temp == 1) // bat dau lam viec
+				{
+					if (userjob == "Student") num_Page = 3;
+					else if (userjob == "Staff_Member") num_Page = 4;
+				}
+				else if (temp == 0) // dang xuat
+				{
+					num_Page = 0;
+				}
 				break;
-				
 			}
 		}
 	}
