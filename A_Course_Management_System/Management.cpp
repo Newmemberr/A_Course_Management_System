@@ -4,7 +4,7 @@ int Management()
 	int num_Page = 0;
 	string username;
 	string userjob;
-	string link;
+	string link = "Data\\School_Year";
 	string current_school_year;
 	int classes_or_semester = 0;
 	while (true)
@@ -24,13 +24,11 @@ int Management()
 			{
 
 				num_Page = SignIn_Page(username, userjob);
-				link = "Data\\" + userjob + "\\" + username + "\\School_Year";
 				break;
 			}
 			case 2:
 			{
 				num_Page = SignUp_Page(username, userjob);
-				link = "Data\\" + userjob + "\\" + username + "\\School_Year";
 				break;
 			}
 			case 3:
@@ -71,7 +69,7 @@ int Management()
 			}
 			case 6:
 			{
-				int temp = Starting_Page(link);
+				int temp = Starting_Page("Data\\" + userjob + "\\" + username);
 				if (temp == 1) // bat dau lam viec
 				{
 					if (userjob == "Student") num_Page = 3;

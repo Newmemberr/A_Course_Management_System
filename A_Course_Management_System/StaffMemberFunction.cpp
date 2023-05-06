@@ -7,25 +7,21 @@ int School_Years_Page(string link, int& classes_or_courses, string& current_scho
 here:
 
 	Transition();
-	
-	fstream file;
-	file.open(link_to_file, ios::in);
 	int cnt = 0;
-	
-	while (getline(file, temp))
-	{
-		cnt++;                          // so luong nam hoc da co
-	}
-	file.close();
 
-	string* list = new string[cnt + 3];
+	cnt = Number_of_Line(link_to_file); // so luong nam hoc da co
 
-	file.open(link_to_file, ios::in);
-	for (int i = 0; getline(file, temp);i++)
+	string* list = new string[cnt + 2];
+
+	fstream file(link_to_file, ios::in);
+	if (file.is_open())
 	{
-		list[i] = temp; // luu du lieu vao list
+		for (int i = 0; getline(file, temp);i++)
+		{
+			list[i] = temp; // luu du lieu vao list
+		}
+		file.close();
 	}
-	file.close();
 
 	list[cnt] =     "Create new school year";
 	list[cnt + 1] = "Go back";

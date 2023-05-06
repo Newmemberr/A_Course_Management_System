@@ -13,14 +13,75 @@ void Create_Data()
 		// chua ton tai cac file can thiet
 		// tao cac file can thiet
 		system("MD Data\\Student");
-		fstream file1("Data\\Student\\List_Of_User.TXT", ios::out); 
-		file1.close();
 		system("MD Data\\Staff_Member");
-		fstream file2("Data\\Staff_Member\\List_Of_User.TXT", ios::out);
-		file2.close();
+		system("MD Data\\School_Year");
 	}
 }
 
+// cac ham voi List
+void Create_List(List& list)
+{
+	list.school_year= NULL;
+}
+
+void Destroy_List(List& list)
+{
+	if (list.school_year != NULL)
+	{
+		for (int i = 0;i < list.size;i++)
+		{
+			if (list.school_year[i].semester != NULL)
+			{
+				for (int j = 0;j < list.school_year[i].size; j++)
+				{
+					if (list.school_year[i].semester[j].course != NULL)
+					{
+						delete[] list.school_year[i].semester[j].course;
+					}
+				}
+				delete[] list.school_year[i].semester;
+			}
+		}
+		delete[] list.school_year;
+	}
+}
+
+void Add(List& list, School_Year& school_year)
+{
+	for (int i = 0;i < list.size; i++) // kiem tra xem school year ton tai hay chua
+	{
+		if (list.school_year[i].name == school_year.name) return; // neu co thi ket thuc
+	}
+
+	List newlist;
+	newlist.school_year = new School_Year[list.size + 1];
+	for (int i = 0;i < list.size; i++)
+	{
+		newlist.school_year[i] = list.school_year[i];
+	}
+	newlist.school_year[list.size] = school_year;
+	Sort_List(list);
+
+	Destroy_List(list);
+	list.school_year = newlist.school_year;
+}
+
+void Sort_List(List& list)
+{
+	for (int i = 0;i < list.size;i++)
+	{
+		for (int j = i + 1; j < list.size;j++)
+		{
+			if (list.school_year[i].name > list.school_year[j].name)
+			{
+				School_Year temp = list.school_year[i];
+				list.school_year[i] = list.school_year[j];
+				list.school_year[j] = temp;
+			}
+		}
+	}
+}
+//------------------------------------------------------------------------------
 // Viet chu tai vi tri (x,y)
 void Write(string s, int x, int y, string BG_Color, string Text_Color)
 {
@@ -268,16 +329,19 @@ void Transition()
 bool Check_If_String_Is_Existed(string link, string s)
 {
 	fstream file(link, ios::in);
-	string temp;
-	while (getline(file, temp))
+	if (file.is_open())
 	{
-		if (temp == s)
+		string temp;
+		while (getline(file, temp))
 		{
-			file.close();
-			return true;
+			if (temp == s)
+			{
+				file.close();
+				return true;
+			}
 		}
+		file.close();
 	}
-	file.close();
 	return false;
 }
 

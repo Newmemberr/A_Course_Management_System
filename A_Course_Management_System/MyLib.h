@@ -43,6 +43,37 @@ struct Course
 	string Day_Of_Week;
 	string Session;
 };
+
+struct Course_Info
+{
+	string name;
+	string link;
+};
+struct Semester
+{
+	string name;
+	Course_Info* course;
+	int size;
+};
+struct School_Year
+{
+	string name;
+	Semester* semester;
+	int size;
+};
+struct List
+{
+	School_Year* school_year;
+	int size;
+};
+//------------------------StructFunction---------------------------------------------------------
+void Create_List(List& list);
+
+void Destroy_List(List& list);
+
+void Add(List& list, School_Year& school_year);
+
+void Sort_List(List& list);
 //------------------------ConsoleFnction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
 
@@ -170,3 +201,5 @@ void Delete_Course(string link_to_current_course);
 void Show_and_Update_Student_Result(int x, int y, string link_to_current_course, string BG_Color = "white", string Text_Color = "black");
 
 void Update_Student_Result(int x, int y, Student_Result*& student, int size, int index);
+//-----------------------------------StudentFunction.cpp----------------------------------------------------------
+void View_Course(string link);

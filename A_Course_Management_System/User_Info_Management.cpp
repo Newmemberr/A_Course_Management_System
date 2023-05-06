@@ -1,8 +1,6 @@
 #include"MyLib.h"
 int Starting_Page(string link)
 {
-	//chinh sua lai link
-	while (link[link.size() - 1] != '\\') link.erase(link.end() - 1);
 
 	while (true)
 	{
@@ -104,8 +102,8 @@ void View_Profile_Infomation(string link)
 	{
 		Write(info_attr[i] + " " + info[i], x, y + i);
 	}
-	char c=0;
-	while (c!=27 || c!=13) // c != Enter hoac Esc
+	char c = 0;
+	while ((c != 27) && (c != 13)) // c != Enter hoac Esc
 	{
 		c = _getch();
 	}

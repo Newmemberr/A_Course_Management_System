@@ -118,17 +118,20 @@ here:
 	
 	//-----------------------------------
 	link = "Data\\" + userjob + "\\" + username + "\\Password.TXT"; // open file
-	fstream file(link, ios::in);
 	string true_password;
-	file >> true_password;
+	fstream file(link, ios::in);
+	if (file.is_open())
+	{
+		file >> true_password;
+		file.close();
+	}
 	
 	if (true_password != password) // ktra password
 	{
 		Wrong_Password = true;
-		file.close();
 		goto here;
 	}
-	file.close();
+	
 	switch (your_choice) // di toi trang tiep theo
 	{
 		case 3:
@@ -245,8 +248,8 @@ here:
 	file << (username + '\n'); // neu da hop le va chua ton tai thi ghi username vao file list_of_user
 	file.close();
 	//----------------------------------------------------------------------------//
-	// tao thu muc Data\userjob\username\School Year -----------------
-	string temp = "MD Data\\" + userjob + "\\" + username + "\\School_Year";
+	// tao thu muc Data\userjob\username -----------------
+	string temp = "MD Data\\" + userjob + "\\" + username;
 	system(temp.c_str());
 	// tao file password.txt trong thu muc username
 	link = "Data\\" + userjob + "\\" + username+"\\Password.TXT";
@@ -284,7 +287,7 @@ void Get_User_Info(string link)
 	Show_Cursor(true);
 	for (int i = 0;i < 3;i++)
 	{
-		Gotoxy(x + 1 + info_attr[i].size(), y + i);
+		Gotoxy(x + 1 + (int)info_attr[i].size(), y + i);
 		getline(cin, info[i]);
 	}
 	Show_Cursor(false);
