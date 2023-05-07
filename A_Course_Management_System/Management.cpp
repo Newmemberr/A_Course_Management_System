@@ -33,9 +33,10 @@ int Management()
 			}
 			case 3:
 			{
-				system("pause");
-				break;
 				//student
+				num_Page = View_School_Year(link);
+				break;
+				
 			}
 			case 4:
 			{

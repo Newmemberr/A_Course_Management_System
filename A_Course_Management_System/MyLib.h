@@ -44,36 +44,6 @@ struct Course
 	string Session;
 };
 
-struct Course_Info
-{
-	string name;
-	string link;
-};
-struct Semester
-{
-	string name;
-	Course_Info* course;
-	int size;
-};
-struct School_Year
-{
-	string name;
-	Semester* semester;
-	int size;
-};
-struct List
-{
-	School_Year* school_year;
-	int size;
-};
-//------------------------StructFunction---------------------------------------------------------
-void Create_List(List& list);
-
-void Destroy_List(List& list);
-
-void Add(List& list, School_Year& school_year);
-
-void Sort_List(List& list);
 //------------------------ConsoleFnction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
 
@@ -137,20 +107,20 @@ void View_Profile_Infomation(string link);
 //------------------------LoginFunction.cpp------------------------------------------------------
 int Main_Page(); // No.00
 
-int SignIn_Page(string& username, string& userjob); //P.01
+int SignIn_Page(string& username, string& userjob); 
 
-int SignUp_Page(string& username, string& userjob); //P.02
+int SignUp_Page(string& username, string& userjob); 
 
 void Get_User_Info(string link_to_current_student);
 
 //-------------------------StaffMemberFunction.cpp-----------------------------------------------------
-int School_Years_Page(string link, int& classes_or_courses, string& current_school_year); // P.04
+int School_Years_Page(string link, int& classes_or_courses, string& current_school_year);
 
 void Create_New_School_Year(string link);
 
 int Classes_Or_Semester();
 
-int Classes_Page(string link, string Current_School_Year); //P.05.0
+int Classes_Page(string link, string Current_School_Year); 
 
 void Create_New_Class(string link_to_class);
 
@@ -170,7 +140,7 @@ void Add_a_Student(string link_to_current_class, int x, int y);
 
 void Add_a_List_of_Student(string link_to_current_class, int x, int y);
 
-int Semesters_Page(string link, string current_school_year); //P.05.1
+int Semesters_Page(string link, string current_school_year); 
 
 void Create_New_Semester(string link_to_Semester);
 
@@ -202,4 +172,6 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 
 void Update_Student_Result(int x, int y, Student_Result*& student, int size, int index);
 //-----------------------------------StudentFunction.cpp----------------------------------------------------------
-void View_Course(string link);
+int View_School_Year(string link);
+
+void View_Semester(string link);
