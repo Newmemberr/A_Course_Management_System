@@ -5,6 +5,7 @@ int Management()
 	string username;
 	string userjob;
 	string link = "Data\\School_Year";
+	string link_to_user_profile;
 	string current_school_year;
 	int classes_or_semester = 0;
 	while (true)
@@ -22,19 +23,21 @@ int Management()
 			}
 			case 1:
 			{
-
 				num_Page = SignIn_Page(username, userjob);
+				link_to_user_profile = "Data\\" + userjob + "\\" + username;
 				break;
 			}
 			case 2:
 			{
 				num_Page = SignUp_Page(username, userjob);
+				link_to_user_profile = "Data\\" + userjob + "\\" + username;
 				break;
 			}
 			case 3:
 			{
 				//student
-				num_Page = View_School_Year(link);
+				string student_id = Get_User_ID(link_to_user_profile);
+				num_Page = View_School_Year(link, student_id);
 				break;
 				
 			}
@@ -70,7 +73,7 @@ int Management()
 			}
 			case 6:
 			{
-				int temp = Starting_Page("Data\\" + userjob + "\\" + username);
+				int temp = Starting_Page(link_to_user_profile);
 				if (temp == 1) // bat dau lam viec
 				{
 					if (userjob == "Student") num_Page = 3;

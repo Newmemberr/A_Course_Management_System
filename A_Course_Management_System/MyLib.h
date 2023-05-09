@@ -104,6 +104,8 @@ void Change_Password(string link);
 
 void View_Profile_Infomation(string link);
 
+string Get_User_ID(string link);
+
 //------------------------LoginFunction.cpp------------------------------------------------------
 int Main_Page(); // No.00
 
@@ -172,6 +174,10 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 
 void Update_Student_Result(int x, int y, Student_Result*& student, int size, int index);
 //-----------------------------------StudentFunction.cpp----------------------------------------------------------
-int View_School_Year(string link);
+int View_School_Year(string link, string student_id);
 
-void View_Semester(string link);
+void View_Semester(string link, string student_id);
+
+void View_Course(string link, string student_id);
+
+bool Check_If_Student_Is_In_This_Course(string link, string student_id);

@@ -108,3 +108,15 @@ void View_Profile_Infomation(string link)
 		c = _getch();
 	}
 }
+string Get_User_ID(string link)
+{
+	string link_to_info = link + "\\Information.TXT";
+	string user_id;
+	fstream file(link_to_info, ios::in);
+	if (file.is_open())
+	{
+		getline(file, user_id);
+		file.close();
+	}
+	return user_id;
+}
