@@ -323,7 +323,6 @@ int Add_Or_View_Student()
 
 void View_Student(string link_to_file)
 {
-	Transition();
 	int cnt = 0;
 	string temp;
 
@@ -514,7 +513,7 @@ void Show_Students(Student* student, int size, int x, int y)
 
 		switch (c)
 		{
-			case 77:
+			case 77: // right
 			{
 				page++;
 				if (page * Max_line >= size)
@@ -527,7 +526,7 @@ void Show_Students(Student* student, int size, int x, int y)
 				Draw_Border(x, y, 61, Max_line + 2);
 				break;
 			}
-			case 75:
+			case 75: //left
 			{
 				page--;
 				if (page < 0)
@@ -541,7 +540,7 @@ void Show_Students(Student* student, int size, int x, int y)
 				break;
 
 			}
-			case 27:
+			case 27: //Esc
 			{
 				return;
 			}
@@ -835,7 +834,7 @@ void Work_With_Course(string link_to_current_course)
 	s[5] = "Export a list of students";
 	s[6] = "Import the scoreboard";
 	s[7] = "View scoreboard of a course";
-	s[8] = "Update student's result"; // chua xong
+	s[8] = "Update student's result"; 
 	s[9] = "Delete course";
 	s[10] = "Go back";
 
@@ -1278,8 +1277,8 @@ void Export_Students_List(string current_course)
 {
 	Transition();
 	// ve khung
-	Draw_Space_Rectangle(18, 5, 20, 3);
-	Draw_Border(18, 5, 20, 3);
+	Draw_Space_Rectangle(18, 5, 30, 3);
+	Draw_Border(18, 5, 30, 3);
 	Write("Path: ", 19, 6);
 	// Nhap path
 	Gotoxy(19 + 6, 6); 
@@ -1335,8 +1334,8 @@ void Import_Scoreboard(string current_course)
 {
 	Transition();
 	// ve khung
-	Draw_Space_Rectangle(18, 5, 20, 3);
-	Draw_Border(18, 5, 20, 3);
+	Draw_Space_Rectangle(18, 5, 30, 3);
+	Draw_Border(18, 5, 30, 3);
 	Write("Path: ", 19, 6);
 	// Nhap path
 	Gotoxy(19 + 6, 6);
@@ -1369,6 +1368,11 @@ void Show_Scoreboard(int x, int y,string current_course)
 	
 	fstream file(scoreboard_link, ios::in); // dua du lieu vao mang student
 	int index = 0;
+	if (size == 0)
+	{
+		Draw_Error_Board("No Data", 27, 7);
+		return;
+	}
 	if (file.is_open())
 	{
 		//bo dong dau
@@ -1458,11 +1462,11 @@ void Show_Student_Result(Student_Result student, int x, int y)
 	Gotoxy(x, y);
 	printf("%3d ", student.No);
 	printf("%8s ", student.Student_ID.c_str());
-	printf("%17s ", student.Full_Name.c_str());
-	printf("%.3f  ", student.Total_Mark);
-	printf("%.3f  ", student.Final_Mark);
-	printf("%.3f  ", student.Midterm_Mark);
-	printf("%.3f  ", student.Other_Mark);
+	printf("%14s ", student.Full_Name.c_str());
+	printf("%.2f  ", student.Total_Mark);
+	printf("%.2f  ", student.Final_Mark);
+	printf("%.2f  ", student.Midterm_Mark);
+	printf("%.2f  ", student.Other_Mark);
 	return;
 }
 
@@ -1534,6 +1538,12 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 	// luu du lieu tu file student result
 	string scoreboard_link = link_to_current_course + "\\Scoreboard.TXT";
 	int size = Number_of_Line(scoreboard_link) - 1;
+
+	if (size == 0)
+	{
+		Draw_Error_Board("No Data", 27, 7);
+		return;
+	}
 
 	Student_Result* student = new Student_Result[size];
 

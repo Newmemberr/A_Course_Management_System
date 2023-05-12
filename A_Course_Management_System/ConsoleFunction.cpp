@@ -52,3 +52,7 @@ void Change_Text_Size(int a, int b)
     fontex.dwFontSize.Y = b;
     SetCurrentConsoleFontEx(hOut, NULL, &fontex);
 }
+void Set_Full_Screen()
+{
+    ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
+}

@@ -2,14 +2,18 @@
 int Main_Page()
 {
 	Transition();
-	Draw_Border(27, 9, 17, 5);
+	int x = 27, y = 7;
+	Draw_Border(x, y, 17, 5);
+
+	x++; y++;
+
 	string s[3];
 	int your_choice = 0;
 
 	s[0] = "Sign In";
 	s[1] = "Sign Up";
 	s[2] = "Exit";
-	your_choice = Choice(s, 3, 30, 10, "white", "blue");
+	your_choice = Choice(s, 3, x + 2, y, "white", "blue");
 	switch (your_choice)
 	{
 		case 0:

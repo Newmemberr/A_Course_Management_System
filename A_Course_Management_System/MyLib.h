@@ -54,6 +54,8 @@ void ResetColor();
 
 void Change_Text_Size(int a, int b);
 
+void Set_Full_Screen();
+
 //------------------------SupportFunction.cpp------------------------------------------------------
 void Create_Data();
 
@@ -180,4 +182,10 @@ void View_Semester(string link, string student_id);
 
 void View_Course(string link, string student_id);
 
+int View_Course_List_or_View_Scoredboard();
+
+void View_Scoreboard(string link, string* id_course, string* name_course, string student_id, int size, int x, int y);
+
 bool Check_If_Student_Is_In_This_Course(string link, string student_id);
+
+void View_List_Of_Course(string* list, int size, int x, int y);

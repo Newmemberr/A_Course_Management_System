@@ -75,9 +75,9 @@ void View_Semester(string link, string student_id)
 		delete[] list;
 	}
 }
+
 void View_Course(string link, string student_id)
 {
-	Transition();
 
 	string link_to_course_list = link + "\\Courses_List.TXT";
 	int number_of_course = Number_of_Line(link_to_course_list);
@@ -94,7 +94,8 @@ void View_Course(string link, string student_id)
 		file_to_course_list.close();
 	}
 	// duyet cac khoa hoc
-	string* list_of_course_student_studies = new string[number_of_course];
+	string* list_of_course_student_studies_ID = new string[number_of_course];
+	string* list_of_course_student_studies_Name = new string[number_of_course];
 	int number_of_course_student_studies = 0;
 
 	for (int i = 0;i < number_of_course; i++)
@@ -103,19 +104,19 @@ void View_Course(string link, string student_id)
 
 		if (Check_If_Student_Is_In_This_Course(link + "\\" + list_of_course[i], student_id))
 		{
-			list_of_course_student_studies[number_of_course_student_studies] = list_of_course[i]; // luu khoa hoc ma hoc sinh hoc
+			list_of_course_student_studies_ID[number_of_course_student_studies] = list_of_course[i]; // luu khoa hoc ma hoc sinh hoc
 			number_of_course_student_studies++;
 		}
 	}
 	// chuyen ID thanh Ten cua cac khoa hoc
 	for (int i = 0;i < number_of_course_student_studies;i++)
 	{
-		string link_to_course_info = link + "\\" + list_of_course_student_studies[i] + "\\Information.TXT";
+		string link_to_course_info = link + "\\" + list_of_course_student_studies_ID[i] + "\\Information.TXT";
 		fstream file_to_course_info(link_to_course_info, ios::in);
 		if (file_to_course_info.is_open())
 		{
-			getline(file_to_course_info, list_of_course_student_studies[i]);
-			getline(file_to_course_info, list_of_course_student_studies[i]);
+			getline(file_to_course_info, list_of_course_student_studies_Name[i]);
+			getline(file_to_course_info, list_of_course_student_studies_Name[i]);
 			file_to_course_info.close();
 		}
 	}
@@ -126,12 +127,75 @@ void View_Course(string link, string student_id)
 	}
 	else
 	{
-		Choice(list_of_course_student_studies, number_of_course_student_studies, 25, 3, "white", "black");
+		int k = View_Course_List_or_View_Scoredboard();
+		if (k == 0) View_List_Of_Course(list_of_course_student_studies_Name, number_of_course_student_studies, 25, 3);
+		else if (k == 1) View_Scoreboard(link , list_of_course_student_studies_ID, list_of_course_student_studies_Name, student_id, number_of_course_student_studies, 10, 3);
 	}
 
 	delete[] list_of_course;
-	delete[] list_of_course_student_studies;
+	delete[] list_of_course_student_studies_Name;
+	delete[] list_of_course_student_studies_ID;
 	return;
+}
+
+int View_Course_List_or_View_Scoredboard()
+{
+	int x = 27, y = 5;
+	string s1[2]{ "View list of courses", "View scoreboard" };
+
+	Draw_Space_Rectangle(x, y, 25, 4);
+	Draw_Border(x, y, 25, 4);
+
+	x++; y++;
+	return Choice(s1, 2, x, y, "white", "blue");
+}
+
+void View_Scoreboard(string link, string* id_course, string* name_course, string student_id, int size, int x, int y)
+{
+	Transition();
+	//Ve bang
+	Draw_Space_Rectangle(x, y, 40, size + 2);
+	Draw_Border(x, y, 40, size + 2);
+
+	x++; y++;
+	// duyet tung khoa hoc
+	for (int i = 0;i < size; i++)
+	{
+		string link_to_scoreboard = link + "\\" + id_course[i] + "\\Scoreboard.TXT";
+		string temp;
+		fstream file_to_scoreboard(link_to_scoreboard, ios::in);
+		if (file_to_scoreboard.is_open())
+		{
+			while (file_to_scoreboard.eof() == false)
+			{
+				getline(file_to_scoreboard, temp, ','); // bo qua du lieu khong can thiet
+				getline(file_to_scoreboard, temp, ',');
+				if (temp == student_id)
+				{
+					Write(name_course[i], x, y + i);
+					getline(file_to_scoreboard, temp, ',');  // bo qua du lieu khong can thiet
+					getline(file_to_scoreboard, temp, ','); // lay total mark
+					Write(temp, x + 7, y + i);
+					for (int j = 0;j < 3;j++)
+					{
+						getline(file_to_scoreboard, temp, ','); // lay final mark, midterm mark, other mark
+						Write(temp, x + 7 + 4 * ( j + 1 ), y + i);
+					}
+				}
+				else
+				{
+					getline(file_to_scoreboard, temp); // bo qua du lieu khong can thiet
+				}
+			}
+			
+			file_to_scoreboard.close();
+		}
+	}
+	while (true)
+	{
+		char k = _getch();
+		if (k == 27) return;
+	}
 }
 
 bool Check_If_Student_Is_In_This_Course(string link, string student_id)
@@ -157,4 +221,67 @@ bool Check_If_Student_Is_In_This_Course(string link, string student_id)
 		file.close();
 	}
 	return false;
+}
+
+void View_List_Of_Course(string* list, int size, int x, int y)
+{
+	Transition();
+	int Max_line = 7;
+
+	Draw_Space_Rectangle(x, y, 20, Max_line + 2);
+
+	char c = 0;
+	int page = 0;
+	for (int i = 0; i < Max_line && i < size;i++)
+	{
+		//Show_student_Info(student[i], x + 1, y + i + 1);
+		Write(list[i], x + 1, y + i + 1);
+	}
+
+	while (true)
+	{
+		c = _getch();
+		if (c == -32) c = _getch();
+
+		switch (c)
+		{
+		case 77: // right
+		{
+			page++;
+			if (page * Max_line >= size)
+			{
+				page--;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 20, Max_line + 2);
+			break;
+		}
+		case 75: //left
+		{
+			page--;
+			if (page < 0)
+			{
+				page++;
+				break;
+			}
+
+			Draw_Space_Rectangle(x, y, 20, Max_line + 2);
+			break;
+
+		}
+		case 27: //Esc
+		{
+			return;
+		}
+		}
+
+		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
+		{
+			//Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
+			Write(list[i + Max_line * page], x + 1, y + i + 1);
+		}
+
+	}
+
 }

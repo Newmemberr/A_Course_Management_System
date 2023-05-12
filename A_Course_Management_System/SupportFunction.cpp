@@ -88,7 +88,7 @@ int Choice(string* s, int sizeOfs, int x, int y, string BG_Color_1, string Text_
 	// 175 16 ,272
 	string Mark = ">> ";
 	int Exit_Number = -1;
-	int Max_Line = 7;
+	int Max_Line = 12;
 	int Current_Page = 0;
 	int Max_Page = (sizeOfs - 1) / Max_Line;
 	int your_choice = 0;
@@ -260,8 +260,18 @@ void Draw_Error_Board(string Error, int x, int y, string Color)
 
 void Transition() 
 {
+	system("cls");
 	Draw_Border(0, 0, 71, 19, Default_BG_Color, Default_Text_Color);
-	Draw_Space_Rectangle(1, 1, 69, 17,"white");
+
+	Write("Loading", 28, 9);
+	for (int i = 0;i < 3;i++)
+	{
+		Sleep(222);
+		cout << " .";
+	}
+
+	system("cls");
+	Draw_Border(0, 0, 71, 19, Default_BG_Color, Default_Text_Color);
 }
 
 bool Check_If_String_Is_Existed(string link, string s)
@@ -453,7 +463,7 @@ double atod(string s)
 }
 string dtoa(double num)
 {
-	num *= 1000;
+	num *= 100;
 	int size = 3;
 	while ((int)num % 10 == 0) 
 	{
