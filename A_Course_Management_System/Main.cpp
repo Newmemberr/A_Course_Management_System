@@ -2,6 +2,7 @@
 
 int main()
 {
+	
 	Create_Data();
 	Set_Full_Screen();
 	Show_Cursor(FALSE);
@@ -9,4 +10,5 @@ int main()
 	system("color 70");
 	Management();
 	return 0;
+	
 }

@@ -226,6 +226,21 @@ void Draw_Space_Rectangle(int x, int y, int a, int b, string Color)
 	ResetColor();
 }
 
+void Draw_Table(int x, int y, int a, int b, int* arr, int size_of_arr)
+{
+	Draw_Border(x, y, a, b);
+	for (int i = 0;i < size_of_arr;i++)
+	{
+		Gotoxy(x + arr[i], y); cout << char(203);
+		for (int j = 1;j < b - 1;j++)
+		{
+			Gotoxy(x + arr[i], y + j);
+			cout << char(186);
+		}
+		Gotoxy(x + arr[i], y + b - 1); cout << char(202);
+	}
+}
+
 bool Draw_Warning_Board(string Sentence, int x, int y, string Color)
 {
 	Sentence += " (Y/N)";
@@ -258,16 +273,24 @@ void Draw_Error_Board(string Error, int x, int y, string Color)
 	_getch();
 }
 
+void Write_Title(int* coor_X, int* coor_Y, string* title, int size)
+{
+	for (int i = 0;i < size;i++)
+	{
+		Write(title[i], coor_X[i], coor_Y[i]);
+	}
+}
+
 void Transition() 
 {
 	system("cls");
 	Draw_Border(0, 0, 71, 19, Default_BG_Color, Default_Text_Color);
 
-	Write("Loading", 28, 9);
+	Write("Loading ", 28, 9);
 	for (int i = 0;i < 3;i++)
 	{
-		Sleep(222);
-		cout << " .";
+		Sleep(170);
+		cout << ".";
 	}
 
 	system("cls");

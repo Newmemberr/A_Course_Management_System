@@ -69,9 +69,13 @@ void Draw_Border(int x, int y, int a, int b, string BG_Color = Default_BG_Color,
 
 void Draw_Space_Rectangle(int x, int y, int a, int b, string Color = Default_BG_Color);
 
+void Draw_Table(int x, int y, int a, int b, int* arr, int size_of_arr);
+
 bool Draw_Warning_Board(string Sentence, int x, int y, string Color = "red");
 
 void Draw_Error_Board(string Error, int x, int y, string Color = "red");
+
+void Write_Title(int* coor_X, int* coor_Y, string* title, int size);
 
 void Transition(); 
 

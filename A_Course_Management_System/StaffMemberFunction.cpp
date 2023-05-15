@@ -340,7 +340,7 @@ void View_Student(string link_to_file)
 				Read_Student_Info(file, student[i]); // dua du lieu vao mang student
 			}
 			file.close();
-			Show_Students(student, cnt, 5, 3); // show student
+			Show_Students(student, cnt, 3, 3); // show student
 		}
 	}
 	else
@@ -482,22 +482,22 @@ void Show_student_Info(Student& student, int x, int y)
 {
 	Gotoxy(x, y);
 	printf("%3d ", student.No);
-	printf("%8s ", student.Student_ID.c_str());
-	printf("%8s ", student.First_Name.c_str());
-	printf("%8s ", student.Last_Name.c_str());
-	printf("%4s ", student.Gender.c_str());
-	printf("%10s ", student.Date_Of_Birth.c_str());
-	printf("%8s ", student.Social_ID.c_str());
+	printf("%10s ", student.Student_ID.c_str());
+	printf("%10s ", student.First_Name.c_str());
+	printf("%9s ", student.Last_Name.c_str());
+	printf("%6s ", student.Gender.c_str());
+	printf("%8s ", student.Date_Of_Birth.c_str());
+	printf("%9s ", student.Social_ID.c_str());
 	return;
 }
 
 void Show_Students(Student* student, int size, int x, int y)
 {
 	Transition();
-	int Max_line = 7;
+	int Max_line = 10;
 
-	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-	Draw_Border(x, y, 61, Max_line + 2);
+	//Draw_Space_Rectangle(x, y, 61, Max_line + 2);
+	//Draw_Border(x, y, 61, Max_line + 2);
 
 	char c = 0;
 	int page = 0;
@@ -505,7 +505,23 @@ void Show_Students(Student* student, int size, int x, int y)
 	{
 		Show_student_Info(student[i], x + 1, y + i + 1);
 	}
-	
+	// ve bang
+	int arr[6]{5,16,27,37,44,53};
+	Draw_Table(x, y, x + 63, Max_line + 2, arr, 6);
+
+	int coor_X[7];
+	int coor_Y[7];
+	coor_X[0] = x + 1;
+	coor_Y[0] = y - 1;
+	for (int i = 1;i < 7;i++)
+	{
+		coor_X[i] = x + arr[i - 1] + 1;
+		coor_Y[i] = y - 1;
+	}
+
+	string title[7]{ "STT", "Student ID", "First Name", "Last Name", "Gender", "Birthday", "Social ID" };
+	Write_Title(coor_X, coor_Y, title, 7);
+
 	while (true)
 	{
 		c = _getch();
@@ -521,9 +537,6 @@ void Show_Students(Student* student, int size, int x, int y)
 					page--;
 					break;
 				}
-
-				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-				Draw_Border(x, y, 61, Max_line + 2);
 				break;
 			}
 			case 75: //left
@@ -534,9 +547,6 @@ void Show_Students(Student* student, int size, int x, int y)
 					page++;
 					break;
 				}
-
-				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-				Draw_Border(x, y, 61, Max_line + 2);
 				break;
 
 			}
@@ -550,6 +560,8 @@ void Show_Students(Student* student, int size, int x, int y)
 		{
 			Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
 		}
+		//ve bang
+		Draw_Table(x, y, x + 63, Max_line + 2, arr, 6);
 
 	}
 
@@ -991,7 +1003,7 @@ void Work_With_Course(string link_to_current_course)
 		}
 	}
 
-} 
+}
 
 void Update_Course_Info(string& link_to_course)
 {
