@@ -239,6 +239,17 @@ void Draw_Table(int x, int y, int a, int b, int* arr, int size_of_arr)
 		}
 		Gotoxy(x + arr[i], y + b - 1); cout << char(202);
 	}
+	for (int i = 0;i < a;i++)
+	{
+		Gotoxy(x + i, y + 2); cout << char(205);
+	}
+	Gotoxy(x, y + 2); cout << char(204);
+	Gotoxy(x + a - 1, y + 2); cout << char(185);
+
+	for(int i = 0;i < size_of_arr;i++)
+	{
+		Gotoxy(x + arr[i], y + 2); cout << char(206);
+	}
 }
 
 bool Draw_Warning_Board(string Sentence, int x, int y, string Color)
@@ -486,19 +497,19 @@ double atod(string s)
 }
 string dtoa(double num)
 {
-	num *= 100;
-	int size = 3;
-	while ((int)num % 10 == 0) 
-	{
-		num /= 10;
-		size--;
-	}
+	int size = 2;
+	for (int i = 0;i < size;i++) num *= 10;
+	
 	int a1 = (int)num % (int)pow(10, size);
 	int a2 = (int)num / (int)pow(10, size);
 	string ans;
-	if (size == 0)
+	if (a1 == 0)
 	{
-		ans = itoa(a2) + ".000";
+		ans = itoa(a2) + ".00";
+	}
+	else if (a1 < 10)
+	{
+		ans = itoa(a2) + ".0" + itoa(a1);
 	}
 	else
 	{

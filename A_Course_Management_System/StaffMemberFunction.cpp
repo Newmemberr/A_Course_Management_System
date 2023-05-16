@@ -25,7 +25,7 @@ here:
 
 	list[cnt] =     "Create new school year";
 	list[cnt + 1] = "Go back";
-	int your_choice = Choice(list, cnt + 2, 25, 2, "white", "blue");
+	int your_choice = Choice(list, cnt + 2, 25, 4, "white", "blue");
 
 	if (your_choice == cnt) // create new school year
 	{
@@ -225,7 +225,7 @@ here:
 	list[cnt] =     "Create new class";
 	list[cnt + 1] = "Go back";
 
-	int your_choice = Choice(list, cnt + 2, 25, 2, "white", "blue");
+	int your_choice = Choice(list, cnt + 2, 25, 4, "white", "blue");
 
 	if (your_choice == cnt) // create new class
 	{
@@ -487,7 +487,7 @@ void Show_student_Info(Student& student, int x, int y)
 	printf("%9s ", student.Last_Name.c_str());
 	printf("%6s ", student.Gender.c_str());
 	printf("%8s ", student.Date_Of_Birth.c_str());
-	printf("%9s ", student.Social_ID.c_str());
+	printf("%10s ", student.Social_ID.c_str());
 	return;
 }
 
@@ -496,18 +496,21 @@ void Show_Students(Student* student, int size, int x, int y)
 	Transition();
 	int Max_line = 10;
 
-	//Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-	//Draw_Border(x, y, 61, Max_line + 2);
-
 	char c = 0;
 	int page = 0;
+
+	// ve bang
+	Draw_Space_Rectangle(x, y, x + 62, Max_line + 4);
+
 	for (int i = 0; i < Max_line && i < size;i++)
 	{
 		Show_student_Info(student[i], x + 1, y + i + 1);
 	}
+
 	// ve bang
 	int arr[6]{5,16,27,37,44,53};
-	Draw_Table(x, y, x + 63, Max_line + 2, arr, 6);
+	Draw_Table(x, y - 2, x + 62, Max_line + 4, arr, 6);
+	
 
 	int coor_X[7];
 	int coor_Y[7];
@@ -555,13 +558,15 @@ void Show_Students(Student* student, int size, int x, int y)
 				return;
 			}
 		}
+		Draw_Space_Rectangle(x, y, x + 62, Max_line + 4);
 
 		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
 			Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
 		}
 		//ve bang
-		Draw_Table(x, y, x + 63, Max_line + 2, arr, 6);
+		
+		Draw_Table(x, y - 2, x + 62, Max_line + 4, arr, 6);
 
 	}
 
@@ -598,7 +603,7 @@ here:
 		list[cnt] = "Create new semester";
 		list[cnt + 1] = "Go back";
 
-		your_choice = Choice(list, cnt + 2, 25, 2, "white", "blue");
+		your_choice = Choice(list, cnt + 2, 25, 4, "white", "blue");
 
 		if (your_choice == cnt) // create new semester
 		{
@@ -623,7 +628,7 @@ here:
 
 		list[cnt] = "Go back";
 
-		your_choice = Choice(list, cnt + 1, 25, 2, "white", "blue");
+		your_choice = Choice(list, cnt + 1, 25, 4, "white", "blue");
 
 		if (your_choice == cnt)  // quay tro ve school_year_page
 		{
@@ -706,7 +711,7 @@ here:
 		Name_list[cnt + 1] = "Go back";
 	}
 	
-	int your_choice = Choice(Name_list, cnt + 2, 25, 2, "white", "blue");
+	int your_choice = Choice(Name_list, cnt + 2, 25, 4, "white", "blue");
 
 	if (your_choice == 0) // create new course
 	{
@@ -962,7 +967,7 @@ void Work_With_Course(string link_to_current_course)
 				{
 					Read_Student_Info(file_to_student_list, student[i]);
 				}
-				Show_and_Delete_Students_in_a_Course(student, cnt, 5,3,"white", "blue");
+				Show_and_Delete_Students_in_a_Course(student, cnt, 3,3,"white", "blue");
 				Update_Student_List(link_to_student_list, student, cnt);
 				delete[] student;
 				break;
@@ -979,12 +984,12 @@ void Work_With_Course(string link_to_current_course)
 			}
 			case 7:
 			{
-				Show_Scoreboard(5, 2, link_to_current_course);
+				Show_Scoreboard(2, 3, link_to_current_course);
 				break;
 			}
 			case 8:
 			{
-				Show_and_Update_Student_Result(5, 2, link_to_current_course, "white", "blue");
+				Show_and_Update_Student_Result(2, 3, link_to_current_course, "white", "blue");
 				break;
 			}
 			case 9:
@@ -1143,11 +1148,10 @@ void Update_Course_Info(string& link_to_course)
 void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, int y, string BG_Color, string Text_Color)
 {
 	Transition();
-	int Max_line = 7;
+	int Max_line = 10;
 	int your_choice = 0;
 
-	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-	Draw_Border(x, y, 61, Max_line + 2);
+	Draw_Space_Rectangle(x, y, x + 62, Max_line + 4);
 
 	char c = 0;
 	int page = 0;
@@ -1160,6 +1164,23 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 	{
 		Show_student_Info(student[i], x + 1, y + i + 1);
 	}
+
+	// ve bang
+	int arr[6]{ 5,16,27,37,44,53 };
+	Draw_Table(x, y - 2, x + 62, Max_line + 4, arr, 6);
+
+	int coor_X[7];
+	int coor_Y[7];
+	coor_X[0] = x + 1;
+	coor_Y[0] = y - 1;
+	for (int i = 1;i < 7;i++)
+	{
+		coor_X[i] = x + arr[i - 1] + 1;
+		coor_Y[i] = y - 1;
+	}
+
+	string title[7]{ "STT", "Student ID", "First Name", "Last Name", "Gender", "Birthday", "Social ID" };
+	Write_Title(coor_X, coor_Y, title, 7);
 
 	while (true)
 	{
@@ -1177,8 +1198,6 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 				break;
 			}
 			your_choice = page * Max_line;
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
 			break;
 		}
 		case 75: //right
@@ -1190,8 +1209,6 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 				break;
 			}
 			your_choice = page * Max_line;
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
 			break;
 
 		}
@@ -1205,7 +1222,7 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 		}
 		case 80: //down
 		{
-			if (your_choice < Max_line * (page + 1) - 1 )
+			if (your_choice < Max_line * (page + 1) - 1 && your_choice < size - 1)
 			{
 				your_choice++;
 			}
@@ -1217,8 +1234,6 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 			{
 				Delete_Student(student, size, your_choice);
 			}
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
 			break;
 		}
 		case 27: //Esc
@@ -1226,6 +1241,8 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 			return;
 		}
 		}
+
+		Draw_Space_Rectangle(x, y, x + 62, Max_line + 4);
 
 		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
@@ -1239,8 +1256,9 @@ void Show_and_Delete_Students_in_a_Course(Student*& student, int& size, int x, i
 			{
 				Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
 			}
-			
 		}
+
+		Draw_Table(x, y - 2, x + 62, Max_line + 4, arr, 6);
 
 	}
 
@@ -1406,11 +1424,9 @@ void Show_Scoreboard(int x, int y,string current_course)
 		file.close();
 	}
 	
+	int Max_line = 10;
 
-	int Max_line = 7;
-
-	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-	Draw_Border(x, y, 61, Max_line + 2);
+	Draw_Space_Rectangle(x, y - 2, x + 65, Max_line + 4);
 
 	char c = 0;
 	int page = 0;
@@ -1418,6 +1434,21 @@ void Show_Scoreboard(int x, int y,string current_course)
 	{
 		Show_Student_Result(student[i], x + 1, y + i + 1);
 	}
+	int arr[6]{ 5,16,34,42,50,58 };
+	Draw_Table(x, y - 2, x + 65, Max_line + 4, arr, 6);
+
+	int coor_X[7];
+	int coor_Y[7];
+	coor_X[0] = x + 1;
+	coor_Y[0] = y - 1;
+	for (int i = 1;i < 7;i++)
+	{
+		coor_X[i] = x + arr[i - 1] + 1;
+		coor_Y[i] = y - 1;
+	}
+
+	string title[7]{ "STT", "Student ID", "    Full Name", " Total", " Final", "Midterm", " Other"};
+	Write_Title(coor_X, coor_Y, title, 7);
 
 	while (true)
 	{
@@ -1433,11 +1464,6 @@ void Show_Scoreboard(int x, int y,string current_course)
 			{
 				page--;
 			}
-			else
-			{
-				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-				Draw_Border(x, y, 61, Max_line + 2);
-			}
 			break;
 		}
 		case 75: // left
@@ -1447,11 +1473,6 @@ void Show_Scoreboard(int x, int y,string current_course)
 			{
 				page++;
 			}
-			else
-			{
-				Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-				Draw_Border(x, y, 61, Max_line + 2);
-			}
 			break;
 		}
 		case 27: // Esc
@@ -1459,12 +1480,12 @@ void Show_Scoreboard(int x, int y,string current_course)
 			return;
 		}
 		}
-
+		Draw_Space_Rectangle(x, y, x + 65, Max_line + 4);
 		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
 			Show_Student_Result(student[i + Max_line * page], x + 1, y + i + 1);
 		}
-
+		Draw_Table(x, y - 2, x + 65, Max_line + 4, arr, 6);
 	}
 
 }
@@ -1472,13 +1493,13 @@ void Show_Scoreboard(int x, int y,string current_course)
 void Show_Student_Result(Student_Result student, int x, int y)
 {
 	Gotoxy(x, y);
-	printf("%3d ", student.No);
-	printf("%8s ", student.Student_ID.c_str());
-	printf("%14s ", student.Full_Name.c_str());
-	printf("%.2f  ", student.Total_Mark);
-	printf("%.2f  ", student.Final_Mark);
-	printf("%.2f  ", student.Midterm_Mark);
-	printf("%.2f  ", student.Other_Mark);
+	printf("%3d  ", student.No);
+	printf(" %8s  ", student.Student_ID.c_str());
+	printf("%16s  ", student.Full_Name.c_str());
+	printf(" %.2f  ", student.Total_Mark);
+	printf(" %.2f  ", student.Final_Mark);
+	printf(" %.2f  ", student.Midterm_Mark);
+	printf(" %.2f", student.Other_Mark);
 	return;
 }
 
@@ -1585,8 +1606,7 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 	int Max_line = 7;
 	int your_choice = 0;
 	// ve khung
-	Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-	Draw_Border(x, y, 61, Max_line + 2);
+	Draw_Space_Rectangle(x, y - 2, x + 65, Max_line + 4);
 
 	char c = 0;
 	int page = 0;
@@ -1599,6 +1619,21 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 	{
 		Show_Student_Result(student[i], x + 1, y + i + 1);
 	}
+
+	int arr[6]{ 5,16,34,42,50,58 };
+	Draw_Table(x, y - 2, x + 65, Max_line + 4, arr, 6);
+
+	int coor_X[7];
+	int coor_Y[7];
+	coor_X[0] = x + 1;
+	coor_Y[0] = y - 1;
+	for (int i = 1;i < 7;i++)
+	{
+		coor_X[i] = x + arr[i - 1] + 1;
+		coor_Y[i] = y - 1;
+	}
+	string title[7]{ "STT", "Student ID", "    Full Name", " Total", " Final", "Midterm", " Other" };
+	Write_Title(coor_X, coor_Y, title, 7);
 
 	while (true)
 	{
@@ -1616,8 +1651,6 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 				break;
 			}
 			your_choice = page * Max_line;
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
 			break;
 		}
 		case 75: //right
@@ -1629,8 +1662,6 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 				break;
 			}
 			your_choice = page * Max_line;
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
 			break;
 
 		}
@@ -1644,7 +1675,7 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 		}
 		case 80: //down
 		{
-			if (your_choice < Max_line * (page + 1) - 1)
+			if (your_choice < Max_line * (page + 1) - 1 && your_choice < size - 1)
 			{
 				your_choice++;
 			}
@@ -1653,10 +1684,8 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 		case 13: //Enter
 		{
 			Update_Student_Result(23 ,7, student, size, your_choice);
-			//ve lai bang
 			Transition();
-			Draw_Space_Rectangle(x, y, 61, Max_line + 2);
-			Draw_Border(x, y, 61, Max_line + 2);
+			Write_Title(coor_X, coor_Y, title, 7);
 			break;
 		}
 		case 27: //Esc
@@ -1683,7 +1712,7 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 			return;
 		}
 		}
-
+		Draw_Space_Rectangle(x, y, x + 65, Max_line + 4);
 		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
 			if (i == your_choice - Max_line * page)
@@ -1696,9 +1725,8 @@ void Show_and_Update_Student_Result(int x, int y, string link_to_current_course,
 			{
 				Show_Student_Result(student[i + Max_line * page], x + 1, y + i + 1);
 			}
-
 		}
-
+		Draw_Table(x, y - 2, x + 65, Max_line + 4, arr, 6);
 	}
 }
 

@@ -1,12 +1,11 @@
 #include"MyLib.h"
 int Starting_Page(string link)
 {
-
 	while (true)
 	{
 		Transition();
 		string list[4]{ "Start","Change Password","View profile infomation","Log out" };
-		int your_choice = Choice(list, 4, 25, 2, "white", "blue");
+		int your_choice = Choice(list, 4, 25, 6, "white", "blue");
 		switch (your_choice)
 		{
 		case 0:
