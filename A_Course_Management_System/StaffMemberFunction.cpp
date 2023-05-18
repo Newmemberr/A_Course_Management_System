@@ -1496,10 +1496,14 @@ void Show_Student_Result(Student_Result student, int x, int y)
 	printf("%3d  ", student.No);
 	printf(" %8s  ", student.Student_ID.c_str());
 	printf("%16s  ", student.Full_Name.c_str());
-	printf(" %.2f  ", student.Total_Mark);
-	printf(" %.2f  ", student.Final_Mark);
-	printf(" %.2f  ", student.Midterm_Mark);
-	printf(" %.2f", student.Other_Mark);
+	if ((int)student.Total_Mark == 10) printf(" %.2f  ", student.Total_Mark);
+	else printf("  %.2f  ", student.Total_Mark);
+	if ((int)student.Final_Mark == 10) printf(" %.2f  ", student.Final_Mark);
+	else printf("  %.2f  ", student.Final_Mark);
+	if ((int)student.Midterm_Mark == 10) printf(" %.2f  ", student.Midterm_Mark);
+	else printf("  %.2f  ", student.Midterm_Mark);
+	if ((int)student.Other_Mark == 10) printf(" %.2f", student.Other_Mark);
+	else printf("  %.2f", student.Other_Mark);
 	return;
 }
 

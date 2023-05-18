@@ -19,7 +19,7 @@ int View_School_Year(string link, string student_id)
 
 	while (true)
 	{
-		int your_choice = Choice(list, cnt + 1, 25, 2, "white", "blue");
+		int your_choice = Choice(list, cnt + 1, 25, 4, "white", "blue");
 		if (your_choice == cnt) break;
 		else
 		{
@@ -61,7 +61,7 @@ void View_Semester(string link, string student_id)
 		list[cnt] = "Go back";
 		while (true)
 		{
-			int your_choice = Choice(list, cnt + 1, 25, 2, "white", "blue");
+			int your_choice = Choice(list, cnt + 1, 25, 4, "white", "blue");
 			if (your_choice == cnt)
 			{
 				break;
@@ -123,13 +123,13 @@ void View_Course(string link, string student_id)
 
 	if (number_of_course_student_studies == 0)
 	{
-		Draw_Error_Board("No course has been created yet", 27, 7);
+		Draw_Error_Board("You don't have any course in this semester", 27, 7);
 	}
 	else
 	{
 		int k = View_Course_List_or_View_Scoredboard();
 		if (k == 0) View_List_Of_Course(list_of_course_student_studies_Name, number_of_course_student_studies, 25, 3);
-		else if (k == 1) View_Scoreboard(link , list_of_course_student_studies_ID, list_of_course_student_studies_Name, student_id, number_of_course_student_studies, 10, 3);
+		else if (k == 1) View_Scoreboard(link , list_of_course_student_studies_ID, list_of_course_student_studies_Name, student_id, number_of_course_student_studies, 4, 3);
 	}
 
 	delete[] list_of_course;
@@ -153,9 +153,28 @@ int View_Course_List_or_View_Scoredboard()
 void View_Scoreboard(string link, string* id_course, string* name_course, string student_id, int size, int x, int y)
 {
 	Transition();
+	if (size == 0)
+	{
+		Draw_Error_Board("No Data", 25, 7);
+		return;
+	}
 	//Ve bang
-	Draw_Space_Rectangle(x, y, 40, size + 2);
-	Draw_Border(x, y, 40, size + 2);
+	Draw_Space_Rectangle(x, y, x + 59, size + 3);
+	int arr[4]{ 14,25,36,49 };
+	Draw_Table(x, y - 2, x + 59, size + 3, arr, 4);
+
+	int coor_X[5];
+	int coor_Y[5];
+	coor_X[0] = x + 1;
+	coor_Y[0] = y - 1;
+	for (int i = 1;i < 5;i++)
+	{
+		coor_X[i] = x + arr[i - 1] + 1;
+		coor_Y[i] = y - 1;
+	}
+
+	string title[5]{ "Course's Name", "Total Mark", "Final Mark", "Midterm Mark", " Other Mark"};
+	Write_Title(coor_X, coor_Y, title, 5);
 
 	x++; y++;
 	// duyet tung khoa hoc
@@ -172,14 +191,13 @@ void View_Scoreboard(string link, string* id_course, string* name_course, string
 				getline(file_to_scoreboard, temp, ',');
 				if (temp == student_id)
 				{
-					Write(name_course[i], x, y + i);
+					Write(name_course[i], x + (arr[0] - (int)name_course[i].size()) / 2, y + i); // ten khoa hoc
+
 					getline(file_to_scoreboard, temp, ',');  // bo qua du lieu khong can thiet
-					getline(file_to_scoreboard, temp, ','); // lay total mark
-					Write(temp, x + 7, y + i);
-					for (int j = 0;j < 3;j++)
+					for (int j = 0;j < 4;j++)
 					{
-						getline(file_to_scoreboard, temp, ','); // lay final mark, midterm mark, other mark
-						Write(temp, x + 7 + 4 * ( j + 1 ), y + i);
+						getline(file_to_scoreboard, temp, ','); // lay total mark, final mark, midterm mark, other mark
+						Write(temp, x + arr[j] + 4, y + i);
 					}
 				}
 				else
@@ -234,8 +252,7 @@ void View_List_Of_Course(string* list, int size, int x, int y)
 	int page = 0;
 	for (int i = 0; i < Max_line && i < size;i++)
 	{
-		//Show_student_Info(student[i], x + 1, y + i + 1);
-		Write(list[i], x + 1, y + i + 1);
+		Write("-" + list[i], x + 1, y + i + 1);
 	}
 
 	while (true)
@@ -278,8 +295,7 @@ void View_List_Of_Course(string* list, int size, int x, int y)
 
 		for (int i = 0; i < Max_line && i + Max_line * page < size; i++)
 		{
-			//Show_student_Info(student[i + Max_line * page], x + 1, y + i + 1);
-			Write(list[i + Max_line * page], x + 1, y + i + 1);
+			Write("-" + list[i + Max_line * page], x + 1, y + i + 1);
 		}
 
 	}
