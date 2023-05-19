@@ -44,7 +44,7 @@ struct Course
 	string Session;
 };
 
-//------------------------ConsoleFnction.cpp-----------------------------------------------------
+//------------------------ConsoleFunction.cpp-----------------------------------------------------
 void Show_Cursor(bool k);
 
 void Gotoxy(short x, short y);
@@ -52,9 +52,19 @@ void Gotoxy(short x, short y);
 void SetColor(string BG_Color, string Text_Color);
 void ResetColor();
 
-void Change_Text_Size(int a, int b);
+void Change_Text_Size(int a, int b); // thay doi kich thuoc text
 
-void Set_Full_Screen();
+void Set_Full_Screen(); // dieu chinh man hinh sang che do full man hinh
+
+void DisableCtrButton(bool Min, bool Max); // vo hieu hoa minimize va maximize
+
+void SetWindowSize(SHORT width, SHORT height); // dieu chinh kich thuoc man hinh
+
+void DisableResizeWindow(); // vo hieu hoa thay doi kich thuoc man hinh
+
+void ShowScrollbar(BOOL Show); // vo hieu hoa scrollbar
+
+void Setting_Interface();
 
 //------------------------SupportFunction.cpp------------------------------------------------------
 void Create_Data();
