@@ -161,7 +161,7 @@ void View_Scoreboard(string link, string* id_course, string* name_course, string
 	//Ve bang
 	Draw_Space_Rectangle(x, y, x + 59, size + 3);
 	int arr[4]{ 14,25,36,49 };
-	Draw_Table(x, y - 2, x + 59, size + 3, arr, 4);
+	Draw_Table(x, y - 2, x + 59, size + 4, arr, 4);
 
 	int coor_X[5];
 	int coor_Y[5];
@@ -192,20 +192,24 @@ void View_Scoreboard(string link, string* id_course, string* name_course, string
 				if (temp == student_id)
 				{
 					Write(name_course[i], x + (arr[0] - (int)name_course[i].size()) / 2, y + i); // ten khoa hoc
-
+			
 					getline(file_to_scoreboard, temp, ',');  // bo qua du lieu khong can thiet
 					for (int j = 0;j < 4;j++)
 					{
-						getline(file_to_scoreboard, temp, ','); // lay total mark, final mark, midterm mark, other mark
+						if (j == 3)
+							getline(file_to_scoreboard, temp); // lay other mark
+						else
+							getline(file_to_scoreboard, temp, ','); // lay total mark, final mark, midterm mark
+
 						Write(temp, x + arr[j] + 4, y + i);
 					}
+					break;
 				}
 				else
 				{
 					getline(file_to_scoreboard, temp); // bo qua du lieu khong can thiet
 				}
 			}
-			
 			file_to_scoreboard.close();
 		}
 	}
