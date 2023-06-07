@@ -939,7 +939,7 @@ void Work_With_Course(string link_to_current_course)
 			{
 				//update course info
 				Update_Course_Info(link_to_current_course);
-				// cap nhat lai bien Max_Student_in_Course
+				// cap nhat lai cac bien
 				file_to_course_information.open(link_to_course_information, ios::in);
 				if (file_to_course_information.is_open())
 				{
@@ -948,6 +948,9 @@ void Work_With_Course(string link_to_current_course)
 					Max_Student_in_Course = atoi(temp);
 					file_to_course_information.close();
 				}
+
+				link_to_course_information = link_to_current_course + "\\Information.TXT";
+				link_to_student_list = link_to_current_course + "\\Students_List.TXT";
 				break;
 			}
 			case 4:
