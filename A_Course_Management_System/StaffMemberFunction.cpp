@@ -7,6 +7,7 @@ int School_Years_Page(string link, int& classes_or_courses, string& current_scho
 here:
 
 	Transition();
+	Write(" School Years's Page : ", 4, 2, "black", "bright white");
 	int cnt = 0;
 
 	cnt = Number_of_Line(link_to_file); // so luong nam hoc da co
@@ -208,6 +209,7 @@ int Classes_Page(string link, string Current_School_Year)
 here:
 
 	Transition();
+	Write(" Classes's Page: ", 4, 2, "black", "bright white");
 	int cnt = 0;
 
 	cnt = Number_of_Line(link_to_list);// so luong lop da co
@@ -486,8 +488,8 @@ void Show_student_Info(Student& student, int x, int y)
 	printf("%10s ", student.First_Name.c_str());
 	printf("%9s ", student.Last_Name.c_str());
 	printf("%6s ", student.Gender.c_str());
-	printf("%8s ", student.Date_Of_Birth.c_str());
-	printf("%10s ", student.Social_ID.c_str());
+	printf("%9s ", student.Date_Of_Birth.c_str());
+	printf("%9s ", student.Social_ID.c_str());
 	return;
 }
 
@@ -580,6 +582,7 @@ int Semesters_Page(string link, string current_school_year)
 here:
 
 	Transition();
+	Write(" Semesters's Page: ", 4, 2, "black", "bright white");
 	fstream file_Semesters_List(link_to_Semesters_List, ios::in);
 	int cnt = 0; // so luong hoc ki da tao ra
 	if (file_Semesters_List.is_open())
@@ -678,6 +681,7 @@ void Courses_Page(string link_to_current_Semester)
 here:
 
 	Transition();
+	Write(" Courses's Page: ", 4, 2, "black", "bright white");
 	string temp;
 	int cnt = 0;
 	cnt = Number_of_Line(link_to_list);// so luong khoa hoc da co

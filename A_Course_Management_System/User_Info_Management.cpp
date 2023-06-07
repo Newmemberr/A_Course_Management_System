@@ -4,6 +4,7 @@ int Starting_Page(string link)
 	while (true)
 	{
 		Transition();
+		Write(" Your Profile: ", 4, 2, "black", "white");
 		string list[4]{ "Start","Change Password","View profile infomation","Log out" };
 		int your_choice = Choice(list, 4, 25, 6, "white", "blue");
 		switch (your_choice)

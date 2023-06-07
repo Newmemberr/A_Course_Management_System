@@ -2,6 +2,7 @@
 int Main_Page()
 {
 	Transition();
+	Write(" Main Page: ", 10, 3, "black", "bright white");
 	int x = 27, y = 7;
 	Draw_Border(x, y, 17, 5);
 
@@ -13,7 +14,7 @@ int Main_Page()
 	s[0] = "Sign In";
 	s[1] = "Sign Up";
 	s[2] = "Exit";
-	your_choice = Choice(s, 3, x + 2, y, "white", "blue");
+	your_choice = Choice(s, 3, x + 2, y, "white", "blue"); // lua chon
 	switch (your_choice)
 	{
 		case 0:
@@ -37,7 +38,7 @@ here:
 	Transition();
 
 	//ve khung-----------------------------
-	Write("Sign In:", 13, 3, Default_BG_Color, "blue");
+	Write(" Sign In: ", 10, 3, "black", "bright white");
 	if (Wrong_Username) //truong hop sai username
 	{
 		Write("Wrong Username", 27, 3, Default_BG_Color, "red");
@@ -155,7 +156,7 @@ int SignUp_Page(string& username, string& userjob)
 here:
 
 	Transition();
-	Write("Sign Up:", 13, 3, Default_BG_Color, "blue");
+	Write(" Sign Up: ", 10, 3, "black", "bright white");
 	//ve khung-----------------------------------------------------
 	if (!valid_username)
 	{
