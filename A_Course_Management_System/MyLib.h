@@ -1,11 +1,8 @@
 #include<iostream>
 #include<fstream>
-#include<time.h>
 #include<string>
 #include<conio.h>
-#include<cstring>
 #include<Windows.h> 
-#include <sys/stat.h>
 #define Default_BG_Color "white"
 #define Default_Text_Color "black"
 using namespace std;
